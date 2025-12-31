@@ -466,9 +466,9 @@ const QuizModal = ({ isOpen, onClose }) => {
     setStep('result');
   };
 
-  const closeAndScrollToPricing = () => {
-    onClose();
-    document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+  const handleUnlockFix = () => {
+    // Redirects directly to the €19 Starter kit payment
+    window.location.href = 'https://buy.stripe.com/aFa9AT6qI0jK40m1u2dZ600';
   };
 
   const handleLearnMore = () => {
@@ -656,7 +656,7 @@ const QuizModal = ({ isOpen, onClose }) => {
               </div>
 
               <div className="mt-auto flex flex-col sm:flex-row gap-4 pt-6 border-t border-white/5">
-                <Button onClick={closeAndScrollToPricing} className="flex-grow text-center justify-center py-6 text-lg">
+                <Button onClick={handleUnlockFix} className="flex-grow text-center justify-center py-6 text-lg">
                   Unlock Your Personal Fix
                 </Button>
                 <button onClick={handleLearnMore} className="px-8 py-4 rounded-lg border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors text-sm font-bold whitespace-nowrap">
@@ -731,7 +731,7 @@ const Hero = ({ onOpenQuiz }) => (
           </p>
           <div className="flex items-center gap-3 mt-auto pt-2 border-t border-white/5">
             <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">MT</div>
-            <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Mark T. - UK</div>
+            <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Mark T. — UK</div>
           </div>
         </div>
 
@@ -744,7 +744,7 @@ const Hero = ({ onOpenQuiz }) => (
           </p>
           <div className="flex items-center gap-3 mt-auto pt-2 border-t border-white/5">
             <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">JL</div>
-            <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Jonas L. - Norway</div>
+            <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Jonas L. — Norway</div>
           </div>
         </div>
 
@@ -757,7 +757,7 @@ const Hero = ({ onOpenQuiz }) => (
           </p>
           <div className="flex items-center gap-3 mt-auto pt-2 border-t border-white/5">
             <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">AR</div>
-            <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Alex R. - Malta</div>
+            <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Alex R. — Canada</div>
           </div>
         </div>
       </div>
@@ -888,7 +888,7 @@ const AgentSection = () => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeading 
         title="Your Private BettingClarity AI" 
-        subtitle="Included in Pro & Founder plans. This isn't just ChatGPT, it's a disciplined gatekeeper built on our proprietary workflow."
+        subtitle="Included in Pro & Founder plans. This isn't just ChatGPT—it's a disciplined gatekeeper built on our proprietary workflow."
       />
 
       <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -1001,7 +1001,7 @@ const ValueSection = () => (
           </div>
           <h3 className="text-xl font-bold text-white mb-4">Smart Administration</h3>
           <p className="text-zinc-400 text-sm leading-relaxed">
-            One well-timed goodwill request or retention offer drafted perfectly by the AI can realistically offset the price of the entire system.
+            One well-timed goodwill request or retention offer—drafted perfectly by the AI—can realistically offset the price of the entire system.
           </p>
         </div>
       </div>
@@ -1028,7 +1028,7 @@ const LeadMagnetSection = ({ onOpenQuiz }) => (
           </h2>
           
           <p className="text-xl text-zinc-400 mb-8 leading-relaxed">
-            Get a free, personalized <strong>BettingClarity Player Profile™</strong> in 3 minutes. Discover where you lose focus and money.
+            Get a free, personalized <strong>BettingClarity Player Profile™</strong> in 3 minutes. Discover where you lose focus—and money.
           </p>
 
           <div className="space-y-6 mb-10">
@@ -1354,7 +1354,7 @@ const Pricing = () => (
             <li className="flex text-zinc-400 text-sm"><CheckCircle className="w-4 h-4 text-emerald-500 mr-3 flex-shrink-0" /> Play vs Pass Framework</li>
           </ul>
           <p className="text-center text-xs text-zinc-500 mb-3 italic">Best for getting structured quickly.</p>
-          <Button variant="secondary" className="w-full">Choose Starter</Button>
+          <Button variant="secondary" className="w-full" onClick={() => window.location.href = 'https://buy.stripe.com/aFa9AT6qI0jK40m1u2dZ600'}>Choose Starter</Button>
           <p className="mt-4 text-xs text-zinc-600 flex items-center justify-center">
             <ShieldAlert className="w-3 h-3 mr-1.5" />
             Secure payment via Stripe
@@ -1376,7 +1376,7 @@ const Pricing = () => (
             <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> Mental Discipline & PASS Framework</li>
           </ul>
           <p className="text-center text-xs text-emerald-400/80 mb-4 font-medium">One avoided bad bet can justify this.</p>
-          <Button variant="primary" className="w-full">Get Clarity Now</Button>
+          <Button variant="primary" className="w-full" onClick={() => window.location.href = 'https://buy.stripe.com/7sY5kD2aseaA9kGb4CdZ601'}>Get Clarity Now</Button>
           <p className="mt-4 text-xs text-zinc-500 flex items-center justify-center">
             <ShieldAlert className="w-3 h-3 mr-1.5" />
             Secure payment via Stripe
@@ -1397,7 +1397,7 @@ const Pricing = () => (
             <li className="flex text-zinc-400 text-sm"><Zap className="w-4 h-4 text-purple-500 mr-3 flex-shrink-0" /> Priority Support</li>
           </ul>
           <p className="text-center text-xs text-zinc-500 mb-3 italic">Limited early supporter access.</p>
-          <Button variant="outline" className="w-full">Become a Founder</Button>
+          <Button variant="outline" className="w-full" onClick={() => window.location.href = 'https://buy.stripe.com/28E3cveXe6I8bsO3CadZ602'}>Become a Founder</Button>
           <p className="mt-4 text-xs text-zinc-600 flex items-center justify-center">
             <ShieldAlert className="w-3 h-3 mr-1.5" />
             Secure payment via Stripe

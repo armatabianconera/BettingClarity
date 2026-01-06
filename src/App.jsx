@@ -1506,7 +1506,7 @@ const AgentSection = () => {
                 {/* Image Placeholder */}
                 <div className="relative aspect-[16/9] w-full bg-[#0a0a0a] flex items-center justify-center">
                     <img 
-                        src="https://placehold.co/1200x675/0f0f0f/10b981?text=PLACEHOLDER:+Master+Strategy+Report" 
+                        src="agent-master-strategy-report-1200x675.webp" 
                         alt="Master Strategy Report" 
                         className="w-full h-full object-cover opacity-80"
                     />
@@ -1790,7 +1790,7 @@ const PromptLibrarySection = () => (
                 {/* Image Placeholder */}
                 <div className="relative aspect-[16/9] w-full bg-[#0a0a0a] flex items-center justify-center">
                     <img 
-                        src="https://placehold.co/1200x675/0f0f0f/10b981?text=PLACEHOLDER:+App+Interface+Screenshot" 
+                        src="agent-app-interface-1200x675.webp" 
                         alt="App Interface" 
                         className="w-full h-full object-cover opacity-80"
                     />

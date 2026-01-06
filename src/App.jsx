@@ -1544,7 +1544,7 @@ const LibrarySection = () => {
       borderColor: "border-blue-500/50",
       iconBg: "bg-blue-500/10 border-blue-500/20",
       glow: "from-blue-600 to-cyan-600",
-      image: "https://placehold.co/800x500/121212/3b82f6?text=Video+Learning+Platform+Preview"
+      image: "library-video-modules-preview-800x500.webp"
     },
     {
       title: "Advanced Playbooks",
@@ -1553,7 +1553,7 @@ const LibrarySection = () => {
       borderColor: "border-purple-500/50",
       iconBg: "bg-purple-500/10 border-purple-500/20",
       glow: "from-purple-600 to-pink-600",
-      image: "https://placehold.co/800x500/121212/a855f7?text=Interactive+Playbooks+Preview"
+      image: "library-advanced-playbooks-preview-800x500.webp"
     },
     {
       title: "Smart Integration",
@@ -1562,7 +1562,7 @@ const LibrarySection = () => {
       borderColor: "border-orange-500/50",
       iconBg: "bg-orange-500/10 border-orange-500/20",
       glow: "from-orange-600 to-red-600",
-      image: "https://placehold.co/800x500/121212/f97316?text=Smart+Report+Integration+Preview"
+      image: "library-smart-integration-preview-800x500.webp"
     }
   ];
 
@@ -1997,7 +1997,7 @@ const ProductDeepDive = () => {
             <div className="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-lg blur opacity-40"></div>
             {/* Aspect Ratio Changed to 4/3 */}
             <div className="relative bg-[#0f0f0f] rounded-lg border border-emerald-500/30 overflow-hidden aspect-[4/3] flex items-center justify-center shadow-2xl">
-              <img src="https://placehold.co/800x600/0f0f0f/10b981?text=Education+&+Frameworks" alt="Education Suite" className="object-cover w-full h-full opacity-90" />
+              <img src="features-education-frameworks-800x600.webp" alt="Education Suite" className="object-cover w-full h-full opacity-90" />
             </div>
           </div>
           <div>
@@ -2031,7 +2031,7 @@ const ProductDeepDive = () => {
           <div className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-blue-400 rounded-lg blur opacity-25"></div>
             <div className="relative bg-[#1a1a1a] rounded-lg border border-white/10 overflow-hidden aspect-[4/3] flex items-center justify-center">
-              <img src="https://placehold.co/800x600/1a1a1a/3b82f6?text=Smart+Reports+Dashboard" alt="Smart Reports" className="object-cover w-full h-full opacity-90" />
+              <img src="features-smart-tracking-reports-800x600.webp" alt="Smart Reports" className="object-cover w-full h-full opacity-90" />
             </div>
           </div>
           <div>
@@ -2065,7 +2065,7 @@ const ProductDeepDive = () => {
           <div className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-orange-600 to-orange-400 rounded-lg blur opacity-25"></div>
             <div className="relative bg-[#1a1a1a] rounded-lg border border-white/10 overflow-hidden aspect-[4/3] flex items-center justify-center">
-              <img src="https://placehold.co/800x600/1a1a1a/f97316?text=Cost+Control+System" alt="Cost Control" className="object-cover w-full h-full opacity-90" />
+              <img src="features-cost-control-advantage-800x600.webp" alt="Cost Control" className="object-cover w-full h-full opacity-90" />
             </div>
           </div>
           <div>
@@ -2411,14 +2411,14 @@ const App = () => {
             <div className="relative group w-full max-w-[280px] transform md:rotate-[-6deg] hover:rotate-0 transition-all duration-500 z-10">
               <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-blue-400 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
               <div className="relative bg-[#1a1a1a] rounded-lg border border-white/10 overflow-hidden aspect-[4/3] flex items-center justify-center">
-                 <img src="https://placehold.co/400x300/1a1a1a/FFF?text=Smart+Journal+Sheet" alt="Betting Journal Sheet" className="object-cover w-full h-full opacity-80 hover:opacity-100 transition-opacity" />
+                 <img src="cta-smart-journal-sheet-400x300.webp" alt="Betting Journal Sheet" className="object-cover w-full h-full opacity-80 hover:opacity-100 transition-opacity" />
               </div>
             </div>
 
             <div className="relative group w-full max-w-[320px] transform md:-translate-y-6 z-20 hover:scale-105 transition-all duration-500">
                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-lg blur opacity-40 group-hover:opacity-75 transition duration-1000"></div>
                <div className="relative bg-[#0f0f0f] rounded-lg border border-emerald-500/30 overflow-hidden aspect-[3/4] flex items-center justify-center shadow-2xl">
-                 <img src="https://placehold.co/600x800/0f0f0f/10b981?text=Workflow+Guide+PDF" alt="Workflow Guide Cover" className="object-cover w-full h-full" />
+                 <img src="cta-workflow-guide-pdf-600x800.webp" alt="Workflow Guide Cover" className="object-cover w-full h-full" />
                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                    <p className="text-white font-bold text-center text-sm">The Workflow Guide</p>
                  </div>
@@ -2428,7 +2428,7 @@ const App = () => {
             <div className="relative group w-full max-w-[280px] transform md:rotate-[6deg] hover:rotate-0 transition-all duration-500 z-10">
               <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-400 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
               <div className="relative bg-[#1a1a1a] rounded-lg border border-white/10 overflow-hidden aspect-[4/3] flex items-center justify-center">
-                <img src="https://placehold.co/400x300/1a1a1a/FFF?text=AI+Agent+Interface" alt="AI Tool Interface" className="object-cover w-full h-full opacity-80 hover:opacity-100 transition-opacity" />
+                <img src="cta-ai-agent-interface-400x300.webp" alt="AI Tool Interface" className="object-cover w-full h-full opacity-80 hover:opacity-100 transition-opacity" />
               </div>
             </div>
           </div>

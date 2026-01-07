@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   CheckCircle, 
   XCircle, 
@@ -43,183 +43,11 @@ import {
   MessageSquare,
   Cpu,
   Layers,
-  Crown // Added Crown for Founder VIP
+  Crown,
+  Copy,
+  ExternalLink,
+  Play
 } from 'lucide-react';
-
-// --- Legal Content Constants ---
-
-const TERMS_TEXT = `1. Introduction
-Welcome to BettingClarity ("we", "our", "us").
-
-BettingClarity provides digital decision-support tools, AI-assisted workflows, prompt libraries, and educational materials designed to help users improve decision-making structure and discipline.
-By accessing or using our website, products, or services, you agree to be bound by these Terms of Service ("Terms"). If you do not agree, please do not use the service.
-
-2. Nature of the Service
-BettingClarity provides:
-• digital educational content
-• decision-support frameworks
-• AI-assisted analytical tools
-• prompt libraries and self-assessment tools
-
-Important:
-BettingClarity does not provide:
-• betting tips
-• predictions
-• guarantees
-• financial, investment, or gambling advice
-All content is provided for educational and self-improvement purposes only.
-
-3. No Professional Advice
-All information provided by BettingClarity is general in nature and does not constitute professional, financial, or gambling advice.
-You acknowledge that:
-• betting and gambling involve risk
-• outcomes are uncertain
-• you are solely responsible for your decisions and actions
-Use of the service is entirely at your own discretion and risk.
-
-4. Eligibility
-You must be at least 18 years old (or the legal age in your jurisdiction) to use BettingClarity.
-By using the service, you confirm that you meet this requirement.
-
-5. Accounts and Access
-Some features may require account creation or access via third-party platforms (e.g., AI tools).
-You are responsible for:
-• maintaining confidentiality of access credentials
-• all activity under your access
-We reserve the right to suspend or terminate access if misuse or abuse is detected.
-
-6. Payments and Purchases
-BettingClarity products are offered as one-time digital purchases, unless explicitly stated otherwise.
-All payments:
-• are processed securely via third-party payment providers (e.g., Stripe)
-• grant access to digital content and tools
-Due to the digital nature of the products, refunds are handled on a case-by-case basis, unless required by applicable law.
-
-7. Intellectual Property
-All content, materials, prompts, workflows, branding, and software elements are the intellectual property of BettingClarity.
-You may:
-• use the materials for personal use
-You may not:
-• redistribute
-• resell
-• copy
-• modify
-• publish
-the content without prior written consent.
-
-8. Acceptable Use
-You agree not to:
-• misuse the service
-• attempt to reverse-engineer tools
-• use the service for unlawful purposes
-• use the service in a way that violates applicable laws or regulations
-We reserve the right to restrict access if these rules are violated.
-
-9. Limitation of Liability
-To the maximum extent permitted by law, BettingClarity shall not be liable for:
-• financial losses
-• betting or gambling outcomes
-• indirect or consequential damages
-Your use of the service is entirely at your own risk.
-
-10. Disclaimer of Warranties
-The service is provided "as is" and "as available", without warranties of any kind, express or implied.
-We do not guarantee uninterrupted access or error-free operation.
-
-11. Changes to the Service or Terms
-We may update these Terms from time to time.
-Continued use of the service after changes constitutes acceptance of the updated Terms.
-
-12. Governing Law
-These Terms shall be governed by and interpreted in accordance with the laws of the applicable jurisdiction of the business operator.
-
-13. Contact
-For questions regarding these Terms, contact:
-📧 support@bettingclarity.com`;
-
-const PRIVACY_TEXT = `1. Introduction
-This Privacy Policy explains how BettingClarity collects, uses, and protects your personal data.
-We are committed to protecting your privacy and complying with applicable data protection laws, including the General Data Protection Regulation (GDPR).
-
-2. Data We Collect
-We may collect the following data:
-
-a) Information You Provide
-• email address
-• name (if provided)
-• quiz or assessment responses
-• support communications
-
-b) Automatically Collected Data
-• IP address
-• browser type
-• device information
-• usage data (pages visited, interactions)
-
-3. How We Use Your Data
-We use your data to:
-• provide access to products and services
-• generate personalized reports or assessments
-• improve our tools and content
-• communicate with you (service-related messages)
-• comply with legal obligations
-We do not sell your personal data.
-
-4. Legal Basis for Processing (GDPR)
-We process personal data based on:
-• your consent
-• performance of a contract
-• legitimate business interests
-• legal obligations
-
-5. Payments
-Payments are processed by third-party provider Stripe.
-We do not store your payment card details.
-Please refer to Stripe’s Privacy Policy for details on payment data handling.
-
-6. Cookies and Analytics
-We may use cookies and similar technologies to:
-• ensure website functionality
-• analyze usage
-• improve user experience
-You may control cookies through your browser settings.
-
-7. Data Retention
-We retain personal data only as long as necessary to:
-• provide services
-• comply with legal requirements
-You may request deletion of your data at any time, subject to legal obligations.
-
-8. Data Sharing
-We may share data with trusted service providers strictly for:
-• hosting
-• analytics
-• payment processing
-All providers are required to handle data securely and lawfully.
-
-9. Your Rights (GDPR)
-You have the right to:
-• access your data
-• correct inaccurate data
-• request deletion
-• restrict or object to processing
-• request data portability
-To exercise your rights, contact us at:
-📧 support@bettingclarity.com
-
-10. Data Security
-We implement appropriate technical and organizational measures to protect your data against unauthorized access, loss, or misuse.
-
-11. International Transfers
-If data is transferred outside the EU, we ensure appropriate safeguards are in place.
-
-12. Changes to This Policy
-We may update this Privacy Policy periodically.
-Updates will be posted on this page with a revised date.
-
-13. Contact
-For privacy-related questions, contact:
-📧 support@bettingclarity.com`;
 
 // --- Global Styles for Font & Smooth Scroll ---
 const GlobalStyles = () => (
@@ -268,7 +96,7 @@ const GlobalStyles = () => (
   `}</style>
 );
 
-// --- Components ---
+// --- Basic Components ---
 
 const Button = ({ children, variant = 'primary', className = '', ...props }) => {
   const baseStyle = "relative inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] tracking-wide";
@@ -311,7 +139,7 @@ const Card = ({ children, className = '', glow = false, allowOverflow = false, o
   </div>
 );
 
-const LegalModal = ({ isOpen, onClose, title, content }) => {
+const LegalModal = ({ isOpen, onClose, title, src }) => {
   if (!isOpen) return null;
 
   return (
@@ -320,7 +148,7 @@ const LegalModal = ({ isOpen, onClose, title, content }) => {
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose}></div>
       
       {/* Modal */}
-      <div className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl animate-fade-in">
+      <div className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl w-full max-w-4xl h-[85vh] flex flex-col shadow-2xl animate-fade-in">
         <div className="flex items-center justify-between p-6 border-b border-white/5 bg-[#0f0f0f] rounded-t-2xl">
           <h3 className="text-xl font-bold text-white">{title}</h3>
           <button onClick={onClose} className="text-zinc-500 hover:text-white transition-colors">
@@ -328,10 +156,13 @@ const LegalModal = ({ isOpen, onClose, title, content }) => {
           </button>
         </div>
         
-        <div className="p-6 overflow-y-auto custom-scrollbar">
-          <div className="prose prose-invert prose-sm max-w-none text-zinc-300 whitespace-pre-wrap leading-relaxed font-light">
-            {content}
-          </div>
+        {/* Iframe Container - White background for standard HTML readability */}
+        <div className="flex-grow bg-white w-full overflow-hidden">
+          <iframe 
+            src={src} 
+            className="w-full h-full border-0 block"
+            title={title}
+          />
         </div>
         
         <div className="p-6 border-t border-white/5 bg-[#0f0f0f] rounded-b-2xl">
@@ -344,714 +175,49 @@ const LegalModal = ({ isOpen, onClose, title, content }) => {
   );
 };
 
-// --- Quiz Data ---
+// --- New Core Components (Hero, Problem, Solution) ---
 
-const QUIZ_QUESTIONS = [
-  // --- BLOCK A: STAKES & CONTROL ---
-  {
-    id: 1,
-    category: "Stakes & Control",
-    question: "How do you typically decide your stake size?",
-    options: [
-      { text: "Strict percentage (1-3%) of bankroll.", points: 0 },
-      { text: "Roughly the same amount every time.", points: 5 },
-      { text: "Based on how confident I feel.", points: 15 },
-      { text: "I increase it if I need to win back money.", points: 25 }
-    ]
-  },
-  {
-    id: 2,
-    category: "Stakes & Control",
-    question: "Do you have a daily 'Stop-Loss' limit?",
-    options: [
-      { text: "Yes, and I stop immediately when hit.", points: 0 },
-      { text: "I have a mental limit, but I break it.", points: 15 },
-      { text: "No, I keep going until I win or run out.", points: 25 },
-      { text: "I don't track daily losses.", points: 20 }
-    ]
-  },
-  {
-    id: 3,
-    category: "Stakes & Control",
-    question: "What percentage of your bankroll is in play right now?",
-    options: [
-      { text: "Less than 5%.", points: 0 },
-      { text: "Around 10-20%.", points: 10 },
-      { text: "More than 50%.", points: 25 },
-      { text: "I don't have a bankroll, I just deposit.", points: 20 }
-    ]
-  },
-  {
-    id: 4,
-    category: "Stakes & Control",
-    question: "Do you ever withdraw your profits?",
-    options: [
-      { text: "Yes, regularly / monthly.", points: 0 },
-      { text: "Sometimes, for big wins.", points: 5 },
-      { text: "Rarely, I usually play until it's gone.", points: 20 },
-      { text: "I haven't had profits to withdraw yet.", points: 10 }
-    ]
-  },
-  
-  // --- BLOCK B: TIMING & CONTEXT ---
-  {
-    id: 5,
-    category: "Timing & Context",
-    question: "When do you place the majority of your bets?",
-    options: [
-      { text: "Pre-match, after research.", points: 0 },
-      { text: "Minutes before kick-off.", points: 10 },
-      { text: "Live / In-Play while watching.", points: 15 },
-      { text: "Live / In-Play when chasing a result.", points: 25 }
-    ]
-  },
-  {
-    id: 6,
-    category: "Timing & Context",
-    question: "Do you bet late at night (after 11 PM)?",
-    options: [
-      { text: "Never / Rarely.", points: 0 },
-      { text: "Only on major US sports (NBA/NHL).", points: 5 },
-      { text: "Yes, often out of boredom.", points: 20 },
-      { text: "Yes, usually trying to recover daily losses.", points: 25 }
-    ]
-  },
-  {
-    id: 7,
-    category: "Timing & Context",
-    question: "Do you bet on leagues you don't follow?",
-    options: [
-      { text: "Never.", points: 0 },
-      { text: "Sometimes, if the stats look good.", points: 10 },
-      { text: "Yes, if there's action.", points: 20 },
-      { text: "Yes, whatever is live right now.", points: 25 }
-    ]
-  },
-  {
-    id: 8,
-    category: "Timing & Context",
-    question: "Do you bet when you are tired or stressed?",
-    options: [
-      { text: "No, I avoid it.", points: 0 },
-      { text: "Occasionally.", points: 10 },
-      { text: "Yes, it helps me relax.", points: 20 },
-      { text: "Yes, often.", points: 25 }
-    ]
-  },
-
-  // --- BLOCK C: EMOTIONS ---
-  {
-    id: 9,
-    category: "Emotions",
-    question: "How do you react after 3 losses in a row?",
-    options: [
-      { text: "I stop and review my process.", points: 0 },
-      { text: "I get annoyed but stick to the plan.", points: 5 },
-      { text: "I look for a 'lock' to fix it.", points: 15 },
-      { text: "I double the next stake (rage bet).", points: 30 }
-    ]
-  },
-  {
-    id: 10,
-    category: "Emotions",
-    question: "Do you check live scores obsessively?",
-    options: [
-      { text: "No, I check the result at the end.", points: 0 },
-      { text: "Sometimes.", points: 5 },
-      { text: "Yes, constantly.", points: 15 },
-      { text: "Yes, and I cash out early out of panic.", points: 20 }
-    ]
-  },
-  {
-    id: 11,
-    category: "Emotions",
-    question: "Have you ever bet to 'make the game interesting'?",
-    options: [
-      { text: "No, only for value.", points: 0 },
-      { text: "Occasionally for big finals.", points: 5 },
-      { text: "Yes, frequently.", points: 15 },
-      { text: "Yes, I can't watch without a bet.", points: 25 }
-    ]
-  },
-  {
-    id: 12,
-    category: "Emotions",
-    question: "How does a bad run affect your real life?",
-    options: [
-      { text: "It doesn't.", points: 0 },
-      { text: "I get a bit grumpy.", points: 5 },
-      { text: "I feel stressed and distracted.", points: 20 },
-      { text: "It ruins my whole day/week.", points: 30 }
-    ]
-  },
-
-  // --- BLOCK D: PROCESS ---
-  {
-    id: 13,
-    category: "Process",
-    question: "Do you check lineups before every bet?",
-    options: [
-      { text: "Always.", points: 0 },
-      { text: "Most of the time.", points: 5 },
-      { text: "Only for big games.", points: 10 },
-      { text: "No, I bet on the team name.", points: 20 }
-    ]
-  },
-  {
-    id: 14,
-    category: "Process",
-    question: "Do you track your bets (Excel/Journal)?",
-    options: [
-      { text: "Yes, every single one.", points: 0 },
-      { text: "I try, but I miss some.", points: 5 },
-      { text: "I check my history in the app.", points: 15 },
-      { text: "No, never.", points: 20 }
-    ]
-  },
-  {
-    id: 15,
-    category: "Process",
-    question: "Do you analyze WHY you lost a bet?",
-    options: [
-      { text: "Yes, I check if it was bad luck or bad logic.", points: 0 },
-      { text: "Sometimes.", points: 5 },
-      { text: "No, I just move to the next one.", points: 15 },
-      { text: "No, the refs cheated.", points: 20 }
-    ]
-  },
-  {
-    id: 16,
-    category: "Process",
-    question: "How many sources do you check?",
-    options: [
-      { text: "3+ (Stats, News, Odds movement).", points: 0 },
-      { text: "1-2 sources.", points: 5 },
-      { text: "I just look at the table.", points: 15 },
-      { text: "None, gut feeling.", points: 20 }
-    ]
-  },
-
-  // --- BLOCK E: AI & TOOLS ---
-  {
-    id: 17,
-    category: "AI & Tools",
-    question: "Do you use AI for analysis?",
-    options: [
-      { text: "Yes, structured prompts.", points: 0 },
-      { text: "Sometimes, simple questions.", points: 5 },
-      { text: "No, but I want to.", points: 5 },
-      { text: "No, I don't trust it.", points: 10 }
-    ]
-  },
-  {
-    id: 18,
-    category: "AI & Tools",
-    question: "Do you look for reasons NOT to bet?",
-    options: [
-      { text: "Always (Devil's Advocate).", points: 0 },
-      { text: "Sometimes.", points: 5 },
-      { text: "No, I look for confirmation.", points: 15 },
-      { text: "I just want action.", points: 25 }
-    ]
-  },
-  {
-    id: 19,
-    category: "AI & Tools",
-    question: "Do you treat 'PASS' as a winning decision?",
-    options: [
-      { text: "Yes, saving money is winning.", points: 0 },
-      { text: "Intellectually yes, emotionally no.", points: 10 },
-      { text: "No, you can't win if you don't play.", points: 20 },
-      { text: "I hate passing.", points: 25 }
-    ]
-  },
-  {
-    id: 20,
-    category: "AI & Tools",
-    question: "What is your main goal?",
-    options: [
-      { text: "Long-term profit (investing).", points: 0 },
-      { text: "Side hustle money.", points: 5 },
-      { text: "Entertainment / Thrill.", points: 15 },
-      { text: "To get rich quick.", points: 30 }
-    ]
-  }
-];
-
-const ARCHETYPES = [
-  // ... archetypes same as before ...
-  {
-    name: "The Disciplined Analyst",
-    min: 0,
-    max: 40,
-    color: "text-emerald-400",
-    leak: "Over-Analysis & Hesitation",
-    lossSource: "Missing value due to fear of pulling the trigger, or getting stuck in analysis paralysis.",
-    fix: "Use the Workflow to set a strict time limit for analysis.",
-    riskScore: "Low (12/100)",
-    recommendations: [
-      "Trust your data: If the Workflow checks out, place the bet.",
-      "Use the AI Agent to validate your thesis quickly.",
-      "Focus on 1-2 core sports to maximize your edge."
-    ],
-    pitch: "You have the discipline, now you need efficiency. The **BettingClarity Pro System** will streamline your process, so you stop second-guessing yourself and start executing like a machine."
-  },
-  {
-    name: "The Unstructured Grinder",
-    min: 41,
-    max: 120,
-    color: "text-blue-400",
-    leak: "Lack of Documentation",
-    lossSource: "Repeating the same mistakes because you don't track *why* you lost (e.g., betting on away favorites).",
-    fix: "Start using the Smart Journal immediately.",
-    riskScore: "Medium (45/100)",
-    recommendations: [
-      "Log every bet, even the small ones.",
-      "Review your 'Tilt' tag in the journal weekly.",
-      "Stop betting on leagues you don't follow closely."
-    ],
-    pitch: "You are working hard but running in circles. The **€19 Starter Kit** gives you the Journal and Workflow to finally see the data behind your results. **One avoided bad bet covers the cost.**"
-  },
-  {
-    name: "The Emotionally Reactive Bettor",
-    min: 121,
-    max: 220,
-    color: "text-orange-400",
-    leak: "Chasing Losses",
-    lossSource: "Doubling stakes or betting on random live events to 'fix' a bad day.",
-    fix: "Implement the 24-Hour Stop-Loss Rule.",
-    riskScore: "High (78/100)",
-    recommendations: [
-      "Never bet live to recover a pre-match loss.",
-      "Use the 'Impulse Check' AI prompt before EVERY bet.",
-      "Take a mandatory break after 2 consecutive losses."
-    ],
-    pitch: "Your emotions are expensive. **Based on your profile, BettingClarity would help you most with slowing down decisions.** Avoiding just one 'rage bet' pays for the Pro package instantly."
-  },
-  {
-    name: "The Impulse Gambler",
-    min: 221,
-    max: 9999,
-    color: "text-red-500",
-    leak: "Total Lack of Structure",
-    lossSource: "Betting for dopamine rather than value. High volume on low-quality events.",
-    fix: "You need a rigid external system (The Protocol).",
-    riskScore: "Critical (94/100)",
-    recommendations: [
-      "Stop betting immediately for 3 days.",
-      "Do not open the betting app without the Workflow open.",
-      "Focus on ONE sport only."
-    ],
-    pitch: "You are bleeding money. You don't need tips; you need a seatbelt. The **BettingClarity System** is cheaper than your next losing bet and forces you to slow down. Build a process tailored to you before you deposit again."
-  }
-];
-
-// --- Report Mock Data ---
-
-const SAMPLE_REPORTS = {
-  // ... sample reports same as before ...
-  leak: {
-    title: "Leak Detector Report",
-    subtitle: "Analysis of last 50 bets",
-    content: (
-      <div className="space-y-6">
-        <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-lg">
-          <h4 className="text-red-400 font-bold uppercase text-xs mb-2 flex items-center"><AlertTriangle className="w-4 h-4 mr-2"/> Critical Leak Detected</h4>
-          <p className="text-white text-sm font-semibold">Live In-Play (75-90 min)</p>
-          <p className="text-zinc-400 text-xs mt-1">You have lost 85% of bets placed in the last 15 minutes of matches.</p>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-zinc-800 p-3 rounded">
-            <span className="text-zinc-500 text-xs block">ROI Pre-Match</span>
-            <span className="text-emerald-400 font-mono">+12.4%</span>
-          </div>
-          <div className="bg-zinc-800 p-3 rounded">
-             <span className="text-zinc-500 text-xs block">ROI Live</span>
-             <span className="text-red-400 font-mono">-28.2%</span>
-          </div>
-        </div>
-        <div className="border-t border-white/10 pt-4">
-          <h5 className="text-emerald-400 font-bold text-xs uppercase mb-2">Recommended Fix</h5>
-          <p className="text-zinc-300 text-sm">Stop all live betting for 7 days. Use the "Pre-Match Only" prompt protocol.</p>
-        </div>
-      </div>
-    )
-  },
-  pattern: {
-    title: "Pattern Finder",
-    subtitle: "Behavioral Analysis",
-    content: (
-      <div className="space-y-6">
-         <div className="bg-blue-500/10 border border-blue-500/20 p-4 rounded-lg">
-          <h4 className="text-blue-400 font-bold uppercase text-xs mb-2 flex items-center"><Search className="w-4 h-4 mr-2"/> Hidden Pattern Found</h4>
-          <p className="text-white text-sm font-semibold">The "Favorite" Trap</p>
-          <p className="text-zinc-400 text-xs mt-1">You win 60% of bets on Underdogs, but lose money overall because you over-stake on "Safe Favorites" (1.30 odds range).</p>
-        </div>
-        <div className="bg-zinc-800 p-4 rounded-lg">
-           <div className="flex justify-between text-xs text-zinc-400 mb-1">
-             <span>Underdog Profit</span>
-             <span className="text-emerald-400">+€450</span>
-           </div>
-           <div className="w-full bg-zinc-700 h-1.5 rounded-full mb-3">
-             <div className="bg-emerald-500 h-1.5 rounded-full w-[70%]"></div>
-           </div>
-           <div className="flex justify-between text-xs text-zinc-400 mb-1">
-             <span>Favorite Profit</span>
-             <span className="text-red-400">-€320</span>
-           </div>
-           <div className="w-full bg-zinc-700 h-1.5 rounded-full">
-             <div className="bg-red-500 h-1.5 rounded-full w-[40%]"></div>
-           </div>
-        </div>
-      </div>
-    )
-  },
-  psych: {
-    title: "Psych Audit",
-    subtitle: "Emotional State Analysis",
-    content: (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-           <div className="w-16 h-16 rounded-full border-4 border-orange-500 flex items-center justify-center text-orange-500 font-bold text-lg">
-             72%
-           </div>
-           <div>
-             <h4 className="text-white font-bold">Tilt Risk: HIGH</h4>
-             <p className="text-zinc-500 text-xs">Based on recent stake increases after losses.</p>
-           </div>
-        </div>
-        <div className="bg-zinc-800/50 p-4 rounded-lg border border-white/5">
-           <h5 className="text-white font-bold text-sm mb-2">Trigger Event</h5>
-           <p className="text-zinc-400 text-xs">Analysis shows you double your stake size immediately after a "Bad Beat" tag.</p>
-        </div>
-        <div className="border-t border-white/10 pt-4">
-           <h5 className="text-emerald-400 font-bold text-xs uppercase mb-2">Suggested Material</h5>
-           <div className="flex items-center text-zinc-300 text-xs bg-zinc-900 p-2 rounded">
-             <PlayCircle className="w-4 h-4 mr-2 text-emerald-500"/>
-             Watch: "The 24-Hour Rule Course Video"
-           </div>
-        </div>
-      </div>
-    )
-  },
-  weekly: {
-    title: "Weekly Tactical Review",
-    subtitle: "Strategy for Next Week",
-    content: (
-      <div className="space-y-6">
-        <div className="grid grid-cols-2 gap-4 text-center">
-           <div className="bg-zinc-800 p-3 rounded border border-white/5">
-              <span className="text-zinc-500 text-xs uppercase">Volume</span>
-              <div className="text-white font-bold">High (Too many bets)</div>
-           </div>
-           <div className="bg-zinc-800 p-3 rounded border border-white/5">
-              <span className="text-zinc-500 text-xs uppercase">Win Rate</span>
-              <div className="text-white font-bold">42% (Low)</div>
-           </div>
-        </div>
-        <div className="bg-emerald-900/20 border border-emerald-500/20 p-4 rounded-lg">
-           <h4 className="text-emerald-400 font-bold uppercase text-xs mb-3">Directives for Next Week</h4>
-           <ul className="space-y-2 text-zinc-300 text-sm">
-             <li className="flex items-center"><CheckCircle className="w-3 h-3 mr-2 text-emerald-500"/> Limit daily bets to max 3.</li>
-             <li className="flex items-center"><CheckCircle className="w-3 h-3 mr-2 text-emerald-500"/> Enforce PASS on all Tennis matches.</li>
-             <li className="flex items-center"><CheckCircle className="w-3 h-3 mr-2 text-emerald-500"/> Review journal every Sunday.</li>
-           </ul>
-        </div>
-      </div>
-    )
-  }
-};
-
-const QuizModal = ({ isOpen, onClose }) => {
-  const [step, setStep] = useState('intro'); // intro, question, analyzing, result
-  const [currentQ, setCurrentQ] = useState(0);
-  const [score, setScore] = useState(0);
-  const [result, setResult] = useState(null);
-  const scrollRef = useRef(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => { document.body.style.overflow = 'unset'; };
-  }, [isOpen]);
-
-  const handleStart = () => {
-    setStep('question');
-    setCurrentQ(0);
-    setScore(0);
-  };
-
-  const handleAnswer = (points) => {
-    const newScore = score + points;
-    setScore(newScore);
-    
-    if (currentQ < QUIZ_QUESTIONS.length - 1) {
-      setCurrentQ(currentQ + 1);
-      if (scrollRef.current) scrollRef.current.scrollTop = 0;
-    } else {
-      setStep('analyzing');
-      setTimeout(() => {
-        calculateResult(newScore);
-      }, 2500);
-    }
-  };
-
-  const calculateResult = (finalScore) => {
-    const found = ARCHETYPES.find(a => finalScore >= a.min && finalScore <= a.max) || ARCHETYPES[ARCHETYPES.length - 1];
-    setResult(found);
-    setStep('result');
-  };
-
-  const handleUnlockFix = () => {
-    onClose();
-    const element = document.getElementById('pricing');
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleLearnMore = () => {
-    onClose();
-    const element = document.getElementById('faq');
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  if (!isOpen) return null;
+const Hero = () => {
+  const scrollToPricing = () => document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose}></div>
+    <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex flex-col items-center justify-center min-h-[85vh]">
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-[#0a0a0a] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] z-0"></div>
+      <div className="blob-green top-0 left-1/2 -translate-x-1/2 opacity-20 blur-[100px] w-[800px] h-[800px] rounded-full z-0"></div>
       
-      {/* Modal Content */}
-      <div ref={scrollRef} className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col no-scrollbar">
-        <button onClick={onClose} className="absolute top-4 right-4 text-zinc-500 hover:text-white z-20 p-2">
-          <X className="w-6 h-6" />
-        </button>
-
-        {/* --- STEP: INTRO --- */}
-        {step === 'intro' && (
-          <div className="p-8 md:p-16 text-center animate-fade-in flex flex-col items-center justify-center min-h-[60vh]">
-            <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mb-8 border border-emerald-500/20">
-              <BrainCircuit className="w-10 h-10 text-emerald-500" />
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Betting Clarity Assessment™</h2>
-            <p className="text-zinc-400 max-w-xl mx-auto mb-10 leading-relaxed text-lg">
-              This is a psychological audit of your decision-making process. 
-              We identify your "Clarity Leaks" and show you exactly where you are losing money.
-            </p>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-2xl mx-auto mb-12">
-              <div className="bg-zinc-900/50 p-4 rounded-xl border border-white/5">
-                <Clock className="w-6 h-6 text-zinc-500 mx-auto mb-2" />
-                <span className="block text-white font-bold mb-1">~3 Minutes</span>
-                <span className="text-xs text-zinc-500">To complete</span>
-              </div>
-              <div className="bg-zinc-900/50 p-4 rounded-xl border border-white/5">
-                <Bot className="w-6 h-6 text-zinc-500 mx-auto mb-2" />
-                <span className="block text-white font-bold mb-1">AI Analysis</span>
-                <span className="text-xs text-zinc-500">Instant Report</span>
-              </div>
-              <div className="bg-zinc-900/50 p-4 rounded-xl border border-white/5">
-                <ShieldCheck className="w-6 h-6 text-zinc-500 mx-auto mb-2" />
-                <span className="block text-white font-bold mb-1">100% Free</span>
-                <span className="text-xs text-zinc-500">No credit card</span>
-              </div>
-            </div>
-            
-            <Button onClick={handleStart} className="w-full sm:w-auto px-16 py-5 text-lg">
-              Begin Assessment
-            </Button>
-          </div>
-        )}
-
-        {/* --- STEP: QUESTION --- */}
-        {step === 'question' && (
-          <div className="p-6 md:p-12 animate-fade-in flex flex-col h-full min-h-[60vh]">
-            <div className="mb-8">
-              <div className="flex justify-between items-end mb-4">
-                <span className="text-emerald-500 text-xs font-bold uppercase tracking-widest">{QUIZ_QUESTIONS[currentQ].category}</span>
-                <span className="text-zinc-500 text-xs font-mono">{currentQ + 1} / {QUIZ_QUESTIONS.length}</span>
-              </div>
-              <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-emerald-500 transition-all duration-500 ease-out"
-                  style={{ width: `${((currentQ + 1) / QUIZ_QUESTIONS.length) * 100}%` }}
-                ></div>
-              </div>
-            </div>
-
-            <div className="flex-grow flex flex-col justify-center">
-              <h3 className="text-2xl md:text-3xl font-bold text-white mb-10 leading-tight">
-                {QUIZ_QUESTIONS[currentQ].question}
-              </h3>
-
-              <div className="space-y-4">
-                {QUIZ_QUESTIONS[currentQ].options.map((opt, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleAnswer(opt.points)}
-                    className="w-full text-left p-6 rounded-xl border border-white/10 bg-zinc-900/40 hover:bg-zinc-800 hover:border-emerald-500/50 hover:text-white text-zinc-300 transition-all duration-200 flex items-center group"
-                  >
-                    <div className="w-6 h-6 rounded-full border border-zinc-600 group-hover:border-emerald-500 mr-5 flex-shrink-0 flex items-center justify-center transition-colors">
-                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    </div>
-                    <span className="text-lg font-medium">{opt.text}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* --- STEP: ANALYZING --- */}
-        {step === 'analyzing' && (
-          <div className="p-12 text-center flex flex-col items-center justify-center min-h-[60vh]">
-            <div className="relative mb-8">
-              <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full animate-pulse"></div>
-              <Loader2 className="relative w-16 h-16 text-emerald-500 animate-spin" />
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-3">Analyzing your patterns...</h3>
-            <p className="text-zinc-500 animate-pulse">Comparing against professional bettor profiles.</p>
-          </div>
-        )}
-
-        {/* --- STEP: RESULT --- */}
-        {step === 'result' && result && (
-          <div className="flex flex-col lg:flex-row min-h-[80vh]">
-            {/* Left: Profile Card */}
-            <div className="w-full lg:w-5/12 bg-[#0f0f0f] p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-white/5 flex flex-col relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-blue-500"></div>
-              <div className="blob-green top-0 left-0 opacity-10 pointer-events-none"></div>
-              
-              <div className="relative z-10">
-                <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2 block">Your Profile Archetype</span>
-                <h2 className={`text-4xl font-bold mb-8 ${result.color} leading-tight`}>{result.name}</h2>
-
-                <div className="space-y-6">
-                  <div className="bg-black/40 p-5 rounded-xl border border-white/5">
-                    <span className="text-xs text-zinc-500 block mb-2 font-bold uppercase">Primary Clarity Leak</span>
-                    <span className="text-white font-semibold flex items-start text-lg">
-                      <AlertTriangle className="w-5 h-5 text-red-500 mr-3 mt-1 flex-shrink-0" />
-                      {result.leak}
-                    </span>
-                  </div>
-
-                  <div className="bg-black/40 p-5 rounded-xl border border-white/5">
-                    <span className="text-xs text-zinc-500 block mb-2 font-bold uppercase">Biggest Source of Loss</span>
-                    <p className="text-zinc-300 text-sm leading-relaxed">
-                      {result.lossSource}
-                    </p>
-                  </div>
-                  
-                  <div className="bg-black/40 p-5 rounded-xl border border-white/5">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-xs text-zinc-500 font-bold uppercase">Risk Score</span>
-                      <span className={`text-xs font-bold ${result.name.includes("Impulse") ? "text-red-500" : "text-emerald-500"}`}>{result.riskScore}</span>
-                    </div>
-                    <div className="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full ${result.name.includes("Impulse") || result.name.includes("Reactive") ? "bg-red-500" : "bg-emerald-500"}`} 
-                        style={{ width: result.name.includes("Impulse") ? '94%' : result.name.includes("Reactive") ? '78%' : result.name.includes("Grinder") ? '45%' : '12%' }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Recommendations & Pitch */}
-            <div className="w-full lg:w-7/12 p-8 md:p-12 bg-[#050505] flex flex-col">
-              <div className="mb-8">
-                <h3 className="text-xl font-bold text-white mb-6 flex items-center">
-                  <Sparkles className="w-5 h-5 text-emerald-500 mr-3" />
-                  3 Free Recommendations
-                </h3>
-                
-                <ul className="space-y-4">
-                  {result.recommendations.map((rec, i) => (
-                    <li key={i} className="flex items-start bg-zinc-900/30 p-4 rounded-lg border border-white/5">
-                      <CheckCircle className="w-5 h-5 text-emerald-500 mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-zinc-300 text-sm leading-relaxed">{rec}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="bg-gradient-to-b from-emerald-900/10 to-transparent border border-emerald-500/20 rounded-xl p-6 md:p-8 mb-10">
-                <div className="flex items-center gap-2 mb-4">
-                  <Target className="w-5 h-5 text-emerald-400" />
-                  <h4 className="text-emerald-400 font-bold text-sm uppercase tracking-wide">Why BettingClarity Fits You</h4>
-                </div>
-                <p className="text-white text-base leading-relaxed mb-4">
-                  <span dangerouslySetInnerHTML={{ __html: result.pitch.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
-                </p>
-                <div className="flex items-center gap-2 text-zinc-500 text-xs italic bg-black/20 p-2 rounded">
-                  <ThumbsUp className="w-3 h-3" />
-                  <span>Based on your profile, eliminating just one or two bad bets pays for the purchase.</span>
-                </div>
-              </div>
-
-              <div className="mt-auto flex flex-col sm:flex-row gap-4 pt-6 border-t border-white/5">
-                <Button onClick={handleUnlockFix} className="flex-grow text-center justify-center py-6 text-lg">
-                  View Pricing & Solutions
-                </Button>
-                <button onClick={handleLearnMore} className="px-8 py-4 rounded-lg border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors text-sm font-bold whitespace-nowrap">
-                  Learn More
-                </button>
-              </div>
-              <p className="text-center text-zinc-600 text-xs mt-4">
-                Build a Process Tailored to You. Instant Access.
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// --- Sections ---
-
-const Hero = ({ onOpenQuiz }) => (
-  <header className="relative pt-24 pb-20 md:pt-40 md:pb-32 overflow-hidden">
-    {/* Background Blobs */}
-    <div className="blob-green top-0 left-1/4 -translate-x-1/2 -translate-y-1/2 opacity-60"></div>
-    <div className="blob-green bottom-0 right-0 translate-x-1/3 translate-y-1/3 opacity-40"></div>
-    {/* NEW: Central Green Glow */}
-    <div className="blob-green top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-30 w-[800px] h-[800px]"></div>
-    
-    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      {/* Badge with increased bottom margin for spacing */}
-      <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-semibold mb-32 backdrop-blur-sm">
-        <ShieldCheck className="w-4 h-4 mr-2" />
-        <span className="tracking-wide uppercase text-xs">Your insurance against chaos</span>
-      </div>
-      
-      {/* Bigger Headline with balanced spacing */}
-      <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-8 animate-fade-in backdrop-blur-sm">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          The Professional Standard
+        </div>
+        
+        {/* Headline */}
+           <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1]">
         Stop Guessing. <br className="hidden md:block" />
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-200 to-white">
           Start Deciding.
         </span>
       </h1>
-      
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
-        <Button 
-          className="w-full sm:w-auto px-10 py-5 text-lg"
-          onClick={() => document.getElementById('assessment').scrollIntoView({ behavior: 'smooth' })}
-        >
-          Get Your Free Betting Profile
-          <ArrowRight className="ml-2 w-5 h-5" />
-        </Button>
-      </div>
+        
+        {/* Buttons (Preserved) */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+          <Button onClick={scrollToPricing} className="h-14 px-8 text-lg shadow-[0_0_50px_-10px_rgba(16,185,129,0.5)]">
+            Get Started Now
+            <ArrowRight size={20} className="ml-2" />
+          </Button>
+          <Button variant="secondary" className="h-14 px-8 text-lg bg-[#0a0a0a] hover:bg-[#1a1a1a]">
+            <PlayCircle size={20} className="mr-2" />
+            Watch How It Works
+          </Button>
+        </div>
 
-      <div className="mt-20 grid md:grid-cols-3 gap-6 text-left relative z-10">
+        {/* 3 Bullet Points (Preserved) */}
+        <div className="mt-20 grid md:grid-cols-3 gap-6 text-left relative z-10">
         <div className="bg-zinc-900/90 border border-white/10 p-6 rounded-xl backdrop-blur-sm hover:border-emerald-500/30 transition-colors shadow-lg shadow-black/50">
           <div className="flex items-center gap-1 text-emerald-400 mb-4">
             {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-emerald-400" />)}
@@ -1091,9 +257,10 @@ const Hero = ({ onOpenQuiz }) => (
           </div>
         </div>
       </div>
-    </div>
-  </header>
-);
+      </div>
+    </section>
+  );
+};
 
 const Problem = () => (
   // Increased pb-32 to pb-48 for more spacing below text
@@ -1248,35 +415,385 @@ const Solution = () => (
   </section>
 );
 
-const ReportModal = ({ isOpen, onClose, type, customContent }) => {
+// --- Feature Sections & Reports ---
+
+const ReportModal = ({ isOpen, onClose, type }) => {
   if (!isOpen) return null;
+
+  // --- Reusable UI Components for Reports ---
   
-  // Use custom content if provided (for the placeholder), otherwise fall back to sample reports
-  const contentToRender = customContent || (type && SAMPLE_REPORTS[type]?.content);
-  const titleToRender = customContent ? "Report Preview" : (type && SAMPLE_REPORTS[type]?.title);
+  const MetricCard = ({ label, value, trend, trendUp, prefix = "" }) => (
+    <div className="bg-[#141414] border border-white/5 p-4 rounded-xl flex flex-col justify-between h-24 relative overflow-hidden group">
+      <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+        <BarChart3 className="w-8 h-8 text-zinc-500" />
+      </div>
+      <span className="text-zinc-500 text-xs font-medium uppercase tracking-wider">{label}</span>
+      <div className="flex items-end gap-2">
+        <span className="text-2xl font-bold text-white tracking-tight">{prefix}{value}</span>
+        {trend && (
+          <span className={`text-xs font-bold mb-1 ${trendUp ? 'text-emerald-500' : 'text-red-500'}`}>
+            {trend}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+
+  const RecommendationCard = ({ type, title, subtitle, icon: Icon, actionLabel }) => (
+    <div className="bg-[#141414] border border-white/5 rounded-xl p-4 flex gap-4 items-start hover:border-emerald-500/20 transition-colors group cursor-pointer">
+      <div className={`p-3 rounded-lg flex-shrink-0 ${type === 'video' ? 'bg-blue-500/10 text-blue-500' : 'bg-purple-500/10 text-purple-500'}`}>
+        <Icon className="w-5 h-5" />
+      </div>
+      <div className="flex-grow">
+        <div className="flex justify-between items-start">
+          <span className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${type === 'video' ? 'text-blue-500' : 'text-purple-500'}`}>
+            {type === 'video' ? 'Recommended Module' : 'System Prompt'}
+          </span>
+        </div>
+        <h4 className="text-white font-bold text-sm mb-1 group-hover:text-emerald-400 transition-colors">{title}</h4>
+        <p className="text-zinc-500 text-xs leading-relaxed mb-3">{subtitle}</p>
+        <div className="flex items-center text-xs font-medium text-zinc-400 group-hover:text-white transition-colors">
+          {actionLabel} <ArrowRight className="w-3 h-3 ml-1" />
+        </div>
+      </div>
+    </div>
+  );
+
+  let content = null;
+  let headerTitle = "";
+  let headerSubtitle = "";
+  let headerIcon = null;
+
+  switch (type) {
+    case 'weekly':
+      headerTitle = "Weekly Tactical Review";
+      headerSubtitle = "Week 42 • Oct 14 - Oct 20";
+      headerIcon = <ClipboardCheck className="w-6 h-6 text-emerald-500" />;
+      content = (
+        <div className="space-y-8 animate-fade-in">
+          {/* KPI Strip */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <MetricCard label="Total Bets" value="42" trend="+12" trendUp={false} />
+            <MetricCard label="Win Rate" value="38.5%" trend="-4.2%" trendUp={false} />
+            <MetricCard label="Turnover" value="2,450" prefix="€" />
+            <MetricCard label="Net Profit" value="-320" prefix="€" trend="Drawdown" trendUp={false} />
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Left Column: Diagnosis (2 cols wide) */}
+            <div className="md:col-span-2 space-y-6">
+              <div className="bg-[#141414] border border-white/5 rounded-xl p-6">
+                <h4 className="text-white font-bold text-lg mb-4 flex items-center">
+                  <Search className="w-5 h-5 mr-2 text-zinc-500" />
+                  Performance Audit
+                </h4>
+                
+                <div className="space-y-4">
+                  <div className="p-4 rounded-lg bg-red-500/5 border border-red-500/10">
+                    <div className="flex items-start gap-3">
+                      <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h5 className="text-red-400 font-bold text-sm">Volume Warning: Overtrading</h5>
+                        <p className="text-zinc-400 text-sm mt-1 leading-relaxed">
+                          You placed <strong>42 bets</strong> this week, which is <strong>85% higher</strong> than your profitable average (22 bets). 
+                          Analysis shows a sharp decline in ROI (-18%) on bets placed after 8:00 PM, suggesting fatigue/boredom betting.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-lg bg-zinc-900 border border-white/5">
+                    <h5 className="text-white font-bold text-sm mb-2">Market Breakdown</h5>
+                    <div className="space-y-3">
+                      <div>
+                        <div className="flex justify-between text-xs text-zinc-400 mb-1">
+                          <span>Pre-Match (Structured)</span>
+                          <span className="text-emerald-500">+12.5% ROI</span>
+                        </div>
+                        <div className="w-full bg-zinc-800 h-1.5 rounded-full">
+                          <div className="bg-emerald-500 h-1.5 rounded-full w-[65%]"></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-xs text-zinc-400 mb-1">
+                          <span>Live In-Play (Impulse)</span>
+                          <span className="text-red-500">-28.4% ROI</span>
+                        </div>
+                        <div className="w-full bg-zinc-800 h-1.5 rounded-full">
+                          <div className="bg-red-500 h-1.5 rounded-full w-[35%]"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-[#141414] border border-white/5 rounded-xl p-6">
+                 <h4 className="text-white font-bold text-lg mb-4">The Fix for Next Week</h4>
+                 <ul className="space-y-3">
+                   <li className="flex items-start text-zinc-300 text-sm">
+                     <CheckCircle className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />
+                     <span><strong>Hard Limit:</strong> Maximum 3 bets per day. Once you hit 3, the app locks for 24h.</span>
+                   </li>
+                   <li className="flex items-start text-zinc-300 text-sm">
+                     <CheckCircle className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />
+                     <span><strong>Protocol Change:</strong> Disable all "Live Betting" markets in your dashboard filters.</span>
+                   </li>
+                 </ul>
+              </div>
+            </div>
+
+            {/* Right Column: Recommendations (1 col wide) */}
+            <div className="space-y-4">
+              <h4 className="text-zinc-500 font-bold text-xs uppercase tracking-wider mb-2">Recommended Actions</h4>
+              
+              <RecommendationCard 
+                type="video"
+                icon={Play}
+                title="The Volume Trap"
+                subtitle="Why betting more feels like working harder, but actually destroys your edge."
+                actionLabel="Watch Module (12m)"
+              />
+
+              <RecommendationCard 
+                type="prompt"
+                icon={Bot}
+                title="The 'Wait-for-Break' Filter"
+                subtitle="Use this prompt before every live bet to force a 2-minute logic check."
+                actionLabel="Copy to Clipboard"
+              />
+
+              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 mt-6">
+                <h5 className="text-emerald-400 font-bold text-sm mb-2">Weekly Grade</h5>
+                <div className="flex items-baseline gap-2">
+                   <span className="text-4xl font-bold text-white">C-</span>
+                   <span className="text-zinc-500 text-xs">Needs Improvement</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+      break;
+
+    case 'leak':
+      headerTitle = "Leak Detector Report";
+      headerSubtitle = "Live Analysis • Last 50 Bets";
+      headerIcon = <AlertTriangle className="w-6 h-6 text-red-500" />;
+      content = (
+        <div className="space-y-8 animate-fade-in">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <MetricCard label="Leak Impact" value="-€450" trend="Critical" trendUp={false} />
+            <MetricCard label="Occurrence" value="18%" prefix="" />
+            <MetricCard label="Avg Stake" value="€50" prefix="" />
+            <MetricCard label="Potential ROI" value="+12%" prefix="" trend="If fixed" trendUp={true} />
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="md:col-span-2 space-y-6">
+               <div className="bg-[#141414] border border-white/5 rounded-xl p-6 relative overflow-hidden">
+                 <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 blur-[50px] rounded-full -mr-10 -mt-10"></div>
+                 <h4 className="text-white font-bold text-lg mb-2 relative z-10">Identified Leak: "Late Chase"</h4>
+                 <p className="text-zinc-400 text-sm leading-relaxed relative z-10">
+                   You have a systematic tendency to place bets in the <strong>75th-90th minute</strong> of football matches when you are currently down for the day. 
+                   These bets have a <strong>negative expected value (-18% EV)</strong> compared to your pre-match bets (+8% EV).
+                 </p>
+                 <div className="mt-6 grid grid-cols-2 gap-4 relative z-10">
+                    <div className="bg-black/40 p-3 rounded border border-white/5">
+                      <span className="text-zinc-500 text-xs block mb-1">Win Rate (0-75 min)</span>
+                      <span className="text-emerald-500 font-bold">54%</span>
+                    </div>
+                    <div className="bg-black/40 p-3 rounded border border-red-500/20">
+                      <span className="text-zinc-500 text-xs block mb-1">Win Rate (75-90 min)</span>
+                      <span className="text-red-500 font-bold">28%</span>
+                    </div>
+                 </div>
+               </div>
+            </div>
+
+            <div className="space-y-4">
+               <h4 className="text-zinc-500 font-bold text-xs uppercase tracking-wider mb-2">The Solution</h4>
+               <RecommendationCard 
+                type="prompt"
+                icon={Bot}
+                title="End-Game Blocker"
+                subtitle="A specific logic-gate prompt to run before any bet after the 70th minute."
+                actionLabel="Copy Prompt"
+              />
+               <RecommendationCard 
+                type="video"
+                icon={Play}
+                title="Chasing Losses Psychology"
+                subtitle="Understanding the dopamine loop of late-game betting."
+                actionLabel="Watch Video"
+              />
+            </div>
+          </div>
+        </div>
+      );
+      break;
+
+    case 'pattern':
+        headerTitle = "Pattern Finder";
+        headerSubtitle = "Behavioral Correlation • 30 Day Lookback";
+        headerIcon = <BrainCircuit className="w-6 h-6 text-blue-500" />;
+        content = (
+          <div className="space-y-8 animate-fade-in">
+             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <MetricCard label="Pattern Str" value="High" prefix="" />
+              <MetricCard label="Sample Size" value="120" prefix="" />
+              <MetricCard label="Profit Diff" value="€780" prefix="" trend="Significant" trendUp={true} />
+              <MetricCard label="Confidence" value="92%" prefix="" />
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+               <div className="md:col-span-2 bg-[#141414] border border-white/5 rounded-xl p-6">
+                 <h4 className="text-white font-bold text-lg mb-4">The "Underdog" Advantage</h4>
+                 <p className="text-zinc-400 text-sm mb-6 leading-relaxed">
+                   Analysis confirms a massive disparity in your results based on odds range. You are highly profitable when betting on 
+                   outcomes priced <strong>2.50 to 4.00</strong>, but you consistently lose money on "safe" bets priced <strong>1.20 to 1.50</strong>.
+                 </p>
+                 
+                 <div className="space-y-4">
+                   <div className="flex items-center gap-4">
+                      <span className="w-24 text-xs text-zinc-500 text-right">Odds 2.50+</span>
+                      <div className="flex-grow bg-zinc-800 h-8 rounded-md relative overflow-hidden">
+                        <div className="absolute top-0 left-0 h-full bg-blue-500/50 flex items-center px-3 text-xs font-bold text-white w-[80%]">
+                           + €1,250 Profit
+                        </div>
+                      </div>
+                   </div>
+                   <div className="flex items-center gap-4">
+                      <span className="w-24 text-xs text-zinc-500 text-right">Odds &lt;1.50</span>
+                      <div className="flex-grow bg-zinc-800 h-8 rounded-md relative overflow-hidden">
+                        <div className="absolute top-0 left-0 h-full bg-red-500/50 flex items-center px-3 text-xs font-bold text-white w-[40%]">
+                           - €470 Loss
+                        </div>
+                      </div>
+                   </div>
+                 </div>
+               </div>
+
+               <div className="space-y-4">
+                 <h4 className="text-zinc-500 font-bold text-xs uppercase tracking-wider mb-2">Strategy Adjustment</h4>
+                 <RecommendationCard 
+                    type="video"
+                    icon={Play}
+                    title="The Favorite Fallacy"
+                    subtitle="Why high strike rate doesn't mean high profit."
+                    actionLabel="Watch Lesson"
+                  />
+                  <div className="bg-zinc-900 border border-white/5 p-4 rounded-xl">
+                    <h5 className="text-white font-bold text-sm mb-2">Next Step</h5>
+                    <p className="text-zinc-500 text-xs">Filter your dashboard to show ONLY odds &gt; 2.00 for the next 7 days.</p>
+                  </div>
+               </div>
+            </div>
+          </div>
+        );
+        break;
+
+    case 'psych':
+        headerTitle = "Psych Audit";
+        headerSubtitle = "Emotional State & Tilt Analysis";
+        headerIcon = <ActivityIcon className="w-6 h-6 text-orange-500" />;
+        content = (
+          <div className="space-y-8 animate-fade-in">
+             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <MetricCard label="Tilt Risk" value="72%" prefix="" trend="High Warning" trendUp={false} />
+              <MetricCard label="Avg Sentiment" value="Neg" prefix="" />
+              <MetricCard label="Forced Bets" value="5" prefix="" />
+              <MetricCard label="Sleep Score" value="4.2" prefix="" trend="Low" trendUp={false} />
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+               <div className="md:col-span-2 space-y-6">
+                 <div className="bg-[#141414] border border-white/5 rounded-xl p-6">
+                    <h4 className="text-white font-bold text-lg mb-4">Trigger Event Detected</h4>
+                    <p className="text-zinc-400 text-sm mb-4 leading-relaxed">
+                       You flagged 3 bets as "Revenge" in your journal this week. All 3 occurred immediately after a VAR decision went against you.
+                       This indicates a specific trigger: <strong>Unfair Variance.</strong>
+                    </p>
+                    <div className="bg-orange-500/10 border border-orange-500/20 p-4 rounded-lg flex items-center gap-4">
+                       <div className="text-2xl">😡</div>
+                       <div>
+                         <p className="text-orange-400 font-bold text-sm">The "Injustice" Tilt</p>
+                         <p className="text-orange-500/70 text-xs">You tend to double stakes when you feel the result was "unfair".</p>
+                       </div>
+                    </div>
+                 </div>
+               </div>
+
+               <div className="space-y-4">
+                 <h4 className="text-zinc-500 font-bold text-xs uppercase tracking-wider mb-2">Mental Defense</h4>
+                 <RecommendationCard 
+                    type="video"
+                    icon={Play}
+                    title="Accepting Variance"
+                    subtitle="How to detach your ego from the result."
+                    actionLabel="Start Module"
+                  />
+                  <RecommendationCard 
+                    type="prompt"
+                    icon={Bot}
+                    title="The Cool-Down Script"
+                    subtitle="Required 15min break script after any 'Bad Beat' tag."
+                    actionLabel="View Protocol"
+                  />
+               </div>
+            </div>
+          </div>
+        );
+        break;
+
+    default:
+      content = <div className="text-zinc-500">No report data found.</div>;
+  }
 
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center px-4">
-      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={onClose}></div>
-      <div className="relative bg-[#0f0f0f] border border-white/10 rounded-xl w-full max-w-md shadow-2xl animate-fade-in flex flex-col">
-        <div className="flex items-center justify-between p-5 border-b border-white/5 bg-[#141414] rounded-t-xl">
-          <div>
-            <h3 className="text-lg font-bold text-white">{titleToRender}</h3>
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" onClick={onClose}></div>
+      
+      {/* Main Modal Container - Wider and more 'Dashboard' like */}
+      <div className="relative bg-[#0a0a0a] border border-zinc-800 rounded-2xl w-full max-w-5xl max-h-[90vh] shadow-2xl animate-fade-in flex flex-col overflow-hidden">
+        
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-white/5 bg-[#0f0f0f]">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center shadow-inner">
+               {headerIcon}
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-white tracking-tight">{headerTitle}</h3>
+              {headerSubtitle && <p className="text-sm text-zinc-500 font-medium">{headerSubtitle}</p>}
+            </div>
           </div>
-          <button onClick={onClose} className="text-zinc-500 hover:text-white"><X className="w-5 h-5"/></button>
+          <div className="flex items-center gap-4">
+             <button className="hidden md:flex items-center gap-2 px-4 py-2 bg-[#1a1a1a] hover:bg-[#252525] border border-white/5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-colors">
+               <Copy className="w-4 h-4" /> Export PDF
+             </button>
+             <button onClick={onClose} className="p-2 text-zinc-500 hover:text-white hover:bg-white/5 rounded-lg transition-all">
+               <X className="w-6 h-6"/>
+             </button>
+          </div>
         </div>
-        <div className="p-6">
-          {contentToRender}
+
+        {/* Scrollable Content */}
+        <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar bg-[#0a0a0a]">
+          {content}
         </div>
-        <div className="p-5 border-t border-white/5 bg-[#141414] rounded-b-xl text-center">
-           <Button onClick={onClose} className="w-full">Close Preview</Button>
+
+        {/* Footer Actions */}
+        <div className="p-6 border-t border-white/5 bg-[#0f0f0f] flex justify-between items-center">
+           <div className="text-xs text-zinc-600 font-mono">Report ID: #8292-XJ</div>
+           <Button onClick={onClose} className="py-3 px-8 text-sm">Close Report</Button>
         </div>
       </div>
     </div>
   );
 };
 
-// Helper Icon Component for Psych Audit since ActivityIcon isn't in main import sometimes
+// Helper Icon Component
 const ActivityIcon = (props) => (
   <svg
     {...props}
@@ -1297,43 +814,28 @@ const ActivityIcon = (props) => (
 const AgentSection = () => {
   const [activeReport, setActiveReport] = useState(null);
 
-  // Placeholder content for the report modal as requested
-  const getPlaceholderContent = (title) => (
-    <div className="text-center py-12">
-      <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4 border border-zinc-700">
-        <FileCheck className="w-8 h-8 text-zinc-500" />
-      </div>
-      <h4 className="text-white font-bold text-lg mb-2">Example Report</h4>
-      <p className="text-zinc-500 text-sm">Detailed example for {title} will be available here soon.</p>
-    </div>
-  );
-
   return (
     <section className="relative py-24 bg-[#0a0a0a] border-y border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* REWORKED Header Section */}
+        {/* Header Section */}
         <div className="text-center max-w-4xl mx-auto mb-16">
-          {/* 1. Headline */}
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 tracking-tight">
             Your Personal Performance Reports
           </h2>
 
-          {/* 2. Core Statement */}
           <h3 className="text-xl md:text-3xl font-bold text-white mb-6 leading-tight">
             We don’t tell you what to bet. <br className="hidden md:block"/>
             <span className="text-emerald-400">We show you how you actually bet- and what it costs you.</span>
           </h3>
 
-          {/* 3. Subheadline */}
           <p className="text-lg text-zinc-400 leading-relaxed mb-12 max-w-2xl mx-auto">
             Built entirely on your own bets, decisions, and behavior. <br className="hidden md:block"/>
             No tips. No predictions. Just clarity from your real data.
           </p>
 
-          {/* 4. Process Flow (3 Steps) */}
+          {/* Process Flow */}
           <div className="grid md:grid-cols-3 gap-6 mb-12 relative">
-            {/* Visual connector line for desktop */}
             <div className="hidden md:block absolute top-8 left-[16%] right-[16%] h-px bg-gradient-to-r from-zinc-800 via-emerald-900/50 to-zinc-800 -z-10"></div>
 
             <div className="bg-[#0f0f0f] p-5 rounded-xl border border-zinc-800 relative z-10 mx-auto w-full max-w-xs shadow-lg">
@@ -1355,7 +857,6 @@ const AgentSection = () => {
             </div>
           </div>
 
-          {/* 5. Why it matters */}
           <div className="bg-zinc-900/30 rounded-2xl p-6 md:p-8 border border-white/5 mb-8 max-w-3xl mx-auto">
             <p className="text-base text-zinc-300 leading-relaxed font-light">
               Most bettors don't lose because they lack information. They lose because they lack feedback on their own behavior. 
@@ -1363,17 +864,15 @@ const AgentSection = () => {
             </p>
           </div>
 
-          {/* 6. Closing Statement */}
           <div className="inline-flex items-center gap-2 text-emerald-400/90 text-sm font-medium bg-emerald-900/10 px-5 py-2.5 rounded-full border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
             <ShieldCheck className="w-4 h-4" />
             <span>This system doesn’t promise profits. It protects the balance you already have.</span>
           </div>
         </div>
 
-        {/* 4 Report Cards Grid - Full Width */}
+        {/* 4 Report Cards Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           
-          {/* Card 1: Leak Detector */}
           <Card 
             className="flex flex-col items-center text-center p-6 hover:bg-[#18181b] group h-full"
             onClick={() => setActiveReport('leak')}
@@ -1390,7 +889,6 @@ const AgentSection = () => {
             </Button>
           </Card>
 
-          {/* Card 2: Pattern Finder */}
           <Card 
             className="flex flex-col items-center text-center p-6 hover:bg-[#18181b] group h-full"
             onClick={() => setActiveReport('pattern')}
@@ -1407,7 +905,6 @@ const AgentSection = () => {
             </Button>
           </Card>
 
-          {/* Card 3: Psych Audit */}
           <Card 
             className="flex flex-col items-center text-center p-6 hover:bg-[#18181b] group h-full"
             onClick={() => setActiveReport('psych')}
@@ -1424,7 +921,6 @@ const AgentSection = () => {
             </Button>
           </Card>
 
-          {/* Card 4: Weekly Tactical */}
           <Card 
             className="flex flex-col items-center text-center p-6 hover:bg-[#18181b] group h-full"
             onClick={() => setActiveReport('weekly')}
@@ -1478,7 +974,7 @@ const AgentSection = () => {
 
         </div>
 
-        {/* Closing Line - Big & Centered */}
+        {/* Closing Line */}
         <div className="text-center max-w-4xl mx-auto">
           <h3 className="text-3xl md:text-5xl font-bold text-white tracking-tighter leading-tight">
             This isn’t advice from an AI. <br/>
@@ -1487,7 +983,7 @@ const AgentSection = () => {
         </div>
 
         {/* Master Strategy Report Screenshot Placeholder */}
-        <div className="mt-12 relative mx-auto max-w-6xl group">
+        <div className="mt-24 relative mx-auto max-w-6xl group">
             <div className="absolute -inset-1 bg-gradient-to-t from-emerald-500/20 via-emerald-500/5 to-transparent rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
             <div className="relative rounded-2xl border border-white/10 bg-[#050505] overflow-hidden shadow-2xl">
                 {/* Mock Browser Header */}
@@ -1515,16 +1011,11 @@ const AgentSection = () => {
 
       </div>
       
-      {/* Updated Report Modal using placeholder content */}
+      {/* Report Modal - teraz jest dużo prostszy i nie wymaga customContent */}
       <ReportModal 
         isOpen={!!activeReport} 
         onClose={() => setActiveReport(null)} 
         type={activeReport} 
-        customContent={activeReport ? getPlaceholderContent(
-          activeReport === 'leak' ? 'Leak Detector' : 
-          activeReport === 'pattern' ? 'Pattern Finder' : 
-          activeReport === 'psych' ? 'Psych Audit' : 'Weekly Review'
-        ) : null}
       />
     </section>
   );
@@ -1866,122 +1357,6 @@ const ValueSection = () => (
   </section>
 );
 
-const LeadMagnetSection = ({ onOpenQuiz }) => (
-  <section id="assessment" className="relative py-24 bg-[#0a0a0a] border-t border-white/5 overflow-hidden">
-    <div className="blob-green top-1/2 right-0 translate-x-1/2 -translate-y-1/2 opacity-20 w-[600px] h-[600px]"></div>
-    <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
-
-    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid lg:grid-cols-2 gap-16 items-center">
-        <div>
-          <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-emerald-400 text-xs font-bold uppercase tracking-widest mb-6">
-            <Sparkles className="w-3 h-3 mr-2" />
-            Free AI Assessment
-          </div>
-          
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-            How Clear Is Your <br/>
-            <span className="text-emerald-500">Betting Process?</span>
-          </h2>
-          
-          <p className="text-xl text-zinc-400 mb-8 leading-relaxed">
-            Get a free, personalized <strong>BettingClarity Player Profile™</strong> in 3 minutes. Discover where you lose focus—and money.
-          </p>
-
-          <div className="space-y-6 mb-10">
-            <div className="flex items-start">
-              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-700 mt-1">
-                <span className="text-xs font-bold text-white">1</span>
-              </div>
-              <div className="ml-4">
-                <h4 className="text-white font-bold text-sm">Self-Diagnosis (Psychology)</h4>
-                <p className="text-zinc-500 text-sm">Identify if you are an "Impulse Bettor", "Overconfident Analyst", or "Unstructured Grinder".</p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-700 mt-1">
-                <span className="text-xs font-bold text-white">2</span>
-              </div>
-              <div className="ml-4">
-                <h4 className="text-white font-bold text-sm">Find Your "Clarity Leaks"</h4>
-                <p className="text-zinc-500 text-sm">See exactly where you lose money: bad timing, emotional chasing, or lack of stop-loss rules.</p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-700 mt-1">
-                <span className="text-xs font-bold text-white">3</span>
-              </div>
-              <div className="ml-4">
-                <h4 className="text-white font-bold text-sm">Savings Framing</h4>
-                <p className="text-zinc-500 text-sm">We don't promise profit. We show you how eliminating 2-3 bad habits protects your bankroll.</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <Button variant="white" className="w-full sm:w-auto" onClick={onOpenQuiz}>
-              Start Free Assessment
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-            <p className="text-zinc-600 text-xs flex items-center">
-              <Clock className="w-3 h-3 mr-1" /> Takes 3 mins. No signup required.
-            </p>
-          </div>
-        </div>
-
-        <div className="relative">
-           <div className="absolute -right-4 -top-6 w-32 h-32 bg-emerald-500/20 blur-[50px] rounded-full"></div>
-           <div className="relative glass-panel rounded-xl p-8 shadow-2xl transform md:rotate-1 hover:rotate-0 transition-transform duration-500">
-             <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-4">
-               <div className="flex items-center gap-2">
-                 <ClipboardCheck className="w-5 h-5 text-emerald-500" />
-                 <span className="font-bold text-white text-sm tracking-wide">YOUR CLARITY PROFILE</span>
-               </div>
-               <span className="text-xs text-zinc-500 font-mono">GEN_ID: 8X29</span>
-             </div>
-
-             <div className="space-y-6">
-               <div>
-                 <span className="text-xs text-zinc-500 uppercase tracking-wider font-bold">Your Archetype</span>
-                 <div className="text-2xl font-bold text-white mt-1">Impulse-Driven Bettor</div>
-                 <div className="w-full h-1.5 bg-zinc-800 rounded-full mt-3 overflow-hidden">
-                   <div className="h-full bg-orange-500 w-[75%]"></div>
-                 </div>
-                 <p className="text-orange-400 text-xs mt-2 flex items-center">
-                   <AlertTriangle className="w-3 h-3 mr-1" /> High reactivity to live scores
-                 </p>
-               </div>
-
-               <div className="grid grid-cols-2 gap-4">
-                 <div className="bg-zinc-900/50 p-3 rounded-lg border border-white/5">
-                   <span className="text-xs text-zinc-500 block mb-1">Biggest Leak</span>
-                   <span className="text-white font-semibold text-sm">Chasing Losses (PM)</span>
-                 </div>
-                 <div className="bg-zinc-900/50 p-3 rounded-lg border border-white/5">
-                   <span className="text-xs text-zinc-500 block mb-1">Risk Score</span>
-                   <span className="text-red-400 font-semibold text-sm">High (82/100)</span>
-                 </div>
-               </div>
-
-               <div className="bg-emerald-900/10 border border-emerald-500/10 p-4 rounded-lg">
-                 <div className="flex items-start gap-3">
-                   <Target className="w-5 h-5 text-emerald-400 mt-0.5" />
-                   <div>
-                     <h5 className="text-emerald-400 text-sm font-bold mb-1">Recommendation</h5>
-                     <p className="text-zinc-300 text-xs leading-relaxed">
-                       Based on your profile, implementing a <strong>"24h Rule"</strong> for loss recovery would likely save you 20-30% of your monthly turnover.
-                     </p>
-                   </div>
-                 </div>
-               </div>
-             </div>
-           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-);
-
 const ProductDeepDive = () => {
   const [activeTab, setActiveTab] = useState(0);
   
@@ -2134,7 +1509,7 @@ const Pricing = () => (
     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeading title="Choose Your Clarity Level." subtitle="Professional tools. Flexible plans. Cancel anytime." />
       
-      {/* 3 Main Tiers Grid - Restored to original layout */}
+      {/* 3 Main Tiers Grid */}
       <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start mb-24">
         
         {/* BASIC */}
@@ -2201,7 +1576,7 @@ const Pricing = () => (
 
       </div>
 
-      {/* LIFETIME - Separate Section Below */}
+      {/* LIFETIME */}
       <div className="max-w-4xl mx-auto">
         <div className="relative bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border border-emerald-500/20 rounded-2xl p-8 md:p-12 overflow-hidden shadow-2xl">
            <div className="absolute top-0 right-0 bg-emerald-900/30 text-emerald-400 text-xs font-bold px-4 py-1.5 rounded-bl uppercase tracking-widest border-b border-l border-emerald-500/20">2026 Early Access</div>
@@ -2341,24 +1716,34 @@ const Footer = ({ onOpenTerms, onOpenPrivacy }) => (
 );
 
 const App = () => {
-  const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [legalModal, setLegalModal] = useState(null); 
 
-  const openTerms = () => setLegalModal({ title: "Terms of Service", content: TERMS_TEXT });
-  const openPrivacy = () => setLegalModal({ title: "Privacy Policy", content: PRIVACY_TEXT });
+  const openTerms = () => setLegalModal({ title: "Terms of Service", src: "TERMS AND CONDITIONS.html" });
+  const openPrivacy = () => setLegalModal({ title: "Privacy Policy", src: "PRIVACY POLICY.html" });
+
+  // --- Head Management (Title & Favicon) ---
+  useEffect(() => {
+    // 1. Set Professional Title
+    document.title = "BettingClarity | Decision Management System";
+
+    // 2. Update Favicon
+    const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/png';
+    link.rel = 'icon';
+    link.href = 'favicon.png';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden selection:bg-emerald-500/30 selection:text-emerald-200">
       <GlobalStyles />
-      
-      <QuizModal isOpen={isQuizOpen} onClose={() => setIsQuizOpen(false)} />
       
       {legalModal && (
         <LegalModal 
           isOpen={!!legalModal} 
           onClose={() => setLegalModal(null)} 
           title={legalModal.title} 
-          content={legalModal.content} 
+          src={legalModal.src} 
         />
       )}
       
@@ -2380,22 +1765,19 @@ const App = () => {
         </div>
       </nav>
 
-      <Hero onOpenQuiz={() => setIsQuizOpen(true)} />
+      <Hero />
       <Problem />
       <Solution />
-      {/* Updated Section */}
       <AgentSection />
-      {/* Newly Added Library Section */}
       <LibrarySection />
       <PromptLibrarySection />
       <ValueSection />
-      <LeadMagnetSection onOpenQuiz={() => setIsQuizOpen(true)} />
+      {/* LeadMagnetSection (Quiz) removed */}
       <ProductDeepDive />
       <Pricing />
       <FAQ />
       
       <section className="relative py-16 overflow-hidden">
-        {/* ... CTA Section content ... */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] to-[#050505]"></div>
         <div className="blob-green top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-30"></div>
         

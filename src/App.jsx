@@ -806,13 +806,16 @@ const QuizModal = ({ isOpen, onClose }) => {
   };
 
   const handleUnlockFix = () => {
-    // Redirects directly to the €19 Starter kit payment
-    window.location.href = 'https://buy.stripe.com/aFa9AT6qI0jK40m1u2dZ600';
+    onClose();
+    const element = document.getElementById('pricing');
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const handleLearnMore = () => {
     onClose();
-    const element = document.getElementById('product-deep-dive');
+    const element = document.getElementById('faq');
     if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
     }
@@ -996,7 +999,7 @@ const QuizModal = ({ isOpen, onClose }) => {
 
               <div className="mt-auto flex flex-col sm:flex-row gap-4 pt-6 border-t border-white/5">
                 <Button onClick={handleUnlockFix} className="flex-grow text-center justify-center py-6 text-lg">
-                  Unlock Your Personal Fix
+                  View Pricing & Solutions
                 </Button>
                 <button onClick={handleLearnMore} className="px-8 py-4 rounded-lg border border-zinc-700 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors text-sm font-bold whitespace-nowrap">
                   Learn More
@@ -1020,28 +1023,23 @@ const Hero = ({ onOpenQuiz }) => (
     {/* Background Blobs */}
     <div className="blob-green top-0 left-1/4 -translate-x-1/2 -translate-y-1/2 opacity-60"></div>
     <div className="blob-green bottom-0 right-0 translate-x-1/3 translate-y-1/3 opacity-40"></div>
+    {/* NEW: Central Green Glow */}
+    <div className="blob-green top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-30 w-[800px] h-[800px]"></div>
     
     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-semibold mb-8 backdrop-blur-sm">
+      {/* Badge with increased bottom margin for spacing */}
+      <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-semibold mb-32 backdrop-blur-sm">
         <ShieldCheck className="w-4 h-4 mr-2" />
         <span className="tracking-wide uppercase text-xs">Your insurance against chaos</span>
       </div>
       
-      <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tighter mb-8 leading-[1.1]">
+      {/* Bigger Headline with balanced spacing */}
+      <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1]">
         Stop Guessing. <br className="hidden md:block" />
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-200 to-white">
           Start Deciding.
         </span>
       </h1>
-      
-      <p className="text-xl md:text-2xl text-zinc-200 max-w-4xl mx-auto mb-6 leading-relaxed font-light">
-        Most bettors don’t lose because of odds. They lose because of noise, emotion, and bad timing. <span className="font-normal">BettingClarity turns chaotic betting history into clear decisions and actionable performance reports.</span>
-      </p>
-
-      <p className="text-sm md:text-base text-emerald-400/90 font-bold tracking-wide uppercase mb-12 max-w-3xl mx-auto">
-        Track decisions. Detect leaks. Fix what actually costs you money. <br className="hidden sm:block" />
-        <span className="text-zinc-500 font-medium ml-0 sm:ml-2 mt-2 sm:mt-0 block sm:inline">No tips. No predictions. Just structure.</span>
-      </p>
       
       <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
         <Button 
@@ -1098,10 +1096,11 @@ const Hero = ({ onOpenQuiz }) => (
 );
 
 const Problem = () => (
-  <section className="relative pt-32 pb-8 bg-[#0a0a0a]">
+  // Increased pb-32 to pb-48 for more spacing below text
+  <section className="relative pt-32 pb-48 bg-[#0a0a0a]">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       {/* Centered Headline - Bigger & Bolder */}
-      <div className="relative z-10 mb-20 max-w-5xl mx-auto">
+      <div className="relative z-10 mb-0 max-w-5xl mx-auto">
         <h2 className="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tighter leading-tight">
           It’s not bad luck. <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-200 to-white">
@@ -1109,13 +1108,12 @@ const Problem = () => (
           </span>
         </h2>
         <p className="text-2xl md:text-3xl text-zinc-300 max-w-4xl mx-auto leading-relaxed font-light">
-          Most bettors don’t lose because they lack information — they lose because they lack a system to control decisions under pressure.
+          Most bettors don’t lose because they lack information- they lose because they lack a system to control decisions under pressure.
         </p>
       </div>
-      
-      {/* Green Separator Line */}
-      <div className="w-full max-w-2xl mx-auto h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
     </div>
+    {/* Separator positioned at the bottom of the section */}
+    <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
   </section>
 );
 
@@ -1324,7 +1322,7 @@ const AgentSection = () => {
           {/* 2. Core Statement */}
           <h3 className="text-xl md:text-3xl font-bold text-white mb-6 leading-tight">
             We don’t tell you what to bet. <br className="hidden md:block"/>
-            <span className="text-emerald-400">We show you how you actually bet — and what it costs you.</span>
+            <span className="text-emerald-400">We show you how you actually bet- and what it costs you.</span>
           </h3>
 
           {/* 3. Subheadline */}
@@ -1807,7 +1805,7 @@ const ValueSection = () => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeading 
         title="Return on Discipline" 
-        subtitle="How BettingClarity pays for itself by fixing decisions — not by predicting outcomes."
+        subtitle="How BettingClarity pays for itself by fixing decisions- not by predicting outcomes."
       />
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -2246,7 +2244,7 @@ const Pricing = () => (
 );
 
 const FAQ = () => (
-  <section className="relative py-20 bg-[#0a0a0a] border-t border-white/5">
+  <section id="faq" className="relative py-20 bg-[#0a0a0a] border-t border-white/5">
     <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeading 

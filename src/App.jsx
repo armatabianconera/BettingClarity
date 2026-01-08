@@ -49,6 +49,43 @@ import {
   Play
 } from 'lucide-react';
 
+// --- NEW: Video Modal Component ---
+const VideoModal = ({ isOpen, onClose, videoId }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center px-4">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/95 backdrop-blur-xl" onClick={onClose}></div>
+      
+      {/* Player Container */}
+      <div className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10 animate-fade-in flex items-center justify-center">
+        <button 
+          onClick={onClose} 
+          className="absolute top-4 right-4 z-10 p-2 bg-black/60 hover:bg-zinc-800 text-white/70 hover:text-white rounded-full transition-all border border-white/5"
+        >
+          <X size={20} />
+        </button>
+        
+        {videoId ? (
+          <iframe 
+            className="w-full h-full"
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
+            title="BettingClarity Demo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowFullScreen
+          ></iframe>
+        ) : (
+          <div className="text-center p-8">
+            <PlayCircle className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
+            <p className="text-zinc-500 font-mono">Video link pending...</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // --- Global Styles for Font & Smooth Scroll ---
 const GlobalStyles = () => (
   <style>{`
@@ -177,7 +214,7 @@ const LegalModal = ({ isOpen, onClose, title, src }) => {
 
 // --- New Core Components (Hero, Problem, Solution) ---
 
-const Hero = () => {
+const Hero = ({ onWatchVideo }) => {
   const scrollToPricing = () => document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
 
   return (
@@ -187,14 +224,6 @@ const Hero = () => {
       <div className="blob-green top-0 left-1/2 -translate-x-1/2 opacity-20 blur-[100px] w-[800px] h-[800px] rounded-full z-0"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-8 animate-fade-in backdrop-blur-sm">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          The Professional Standard
-        </div>
         
         {/* Headline */}
            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1]">
@@ -210,7 +239,7 @@ const Hero = () => {
             Get Started Now
             <ArrowRight size={20} className="ml-2" />
           </Button>
-          <Button variant="secondary" className="h-14 px-8 text-lg bg-[#0a0a0a] hover:bg-[#1a1a1a]">
+          <Button variant="secondary" className="h-14 px-8 text-lg bg-[#0a0a0a] hover:bg-[#1a1a1a]" onClick={onWatchVideo}>
             <PlayCircle size={20} className="mr-2" />
             Watch How It Works
           </Button>
@@ -1717,6 +1746,7 @@ const Footer = ({ onOpenTerms, onOpenPrivacy }) => (
 
 const App = () => {
   const [legalModal, setLegalModal] = useState(null); 
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
 
   const openTerms = () => setLegalModal({ title: "Terms of Service", src: "TERMS AND CONDITIONS.html" });
   const openPrivacy = () => setLegalModal({ title: "Privacy Policy", src: "PRIVACY POLICY.html" });
@@ -1746,6 +1776,13 @@ const App = () => {
           src={legalModal.src} 
         />
       )}
+
+      {/* Video Modal */}
+      <VideoModal 
+        isOpen={videoModalOpen} 
+        onClose={() => setVideoModalOpen(false)} 
+        videoId="" // Wklej ID filmu z YouTube tutaj (np. "dQw4w9WgXcQ")
+      />
       
       <nav className="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -1765,7 +1802,7 @@ const App = () => {
         </div>
       </nav>
 
-      <Hero />
+      <Hero onWatchVideo={() => setVideoModalOpen(true)} />
       <Problem />
       <Solution />
       <AgentSection />

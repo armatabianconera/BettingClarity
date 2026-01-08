@@ -49,6 +49,28 @@ import {
   Play
 } from 'lucide-react';
 
+// --- NEW: Logo Component ---
+// To jest główne miejsce, gdzie definiujemy Logo. Zmiana tutaj zaktualizuje nagłówek i stopkę.
+const Logo = () => (
+  <div className="flex items-center gap-2">
+    {/* INSTRUKCJA ZMIANY LOGO NA WŁASNY PLIK:
+      1. Wgraj swój plik z zieloną kostką do projektu i nazwij go np. "logo.png"
+      2. Odkomentuj poniższą linię z tagiem <img> (usuń // na początku)
+      3. Zakomentuj lub usuń sekcję <div> z ikoną Workflow poniżej
+    */}
+    
+    <img src="logo.png" alt="BettingClarity Logo" className="w-8 h-8 object-contain rounded-lg" />
+
+    {/* --- Obecna ikona (zakomentuj to, jeśli używasz własnego pliku) --- */}
+    {/* <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-black">
+      <Workflow className="w-5 h-5" />
+    </div> */}
+    {/* ------------------------------------------------------------------ */}
+
+    <span className="text-white font-bold text-xl tracking-tight">BettingClarity</span>
+  </div>
+);
+
 // --- NEW: Video Modal Component ---
 const VideoModal = ({ isOpen, onClose, videoId }) => {
   if (!isOpen) return null;
@@ -1714,9 +1736,8 @@ const FAQ = () => (
 const Footer = ({ onOpenTerms, onOpenPrivacy }) => (
   <footer className="bg-[#050505] py-16 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div className="flex items-center justify-center gap-2 mb-8 text-white font-bold text-2xl tracking-tight">
-        <Workflow className="w-6 h-6 text-emerald-500" />
-        <span>BettingClarity</span>
+      <div className="flex justify-center mb-8">
+        <Logo />
       </div>
       
       <div className="max-w-3xl mx-auto bg-[#0a0a0a] p-8 rounded-2xl border border-white/5 mb-10">
@@ -1786,12 +1807,8 @@ const App = () => {
       
       <nav className="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-black">
-              <Workflow className="w-5 h-5" />
-            </div>
-            <span className="text-white font-bold text-xl tracking-tight">BettingClarity</span>
-          </div>
+          <Logo />
+          
           <Button 
             variant="primary" 
             className="hidden sm:flex !py-2.5 !px-6 text-sm !font-bold"

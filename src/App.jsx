@@ -46,31 +46,9 @@ import {
   Crown,
   Copy,
   ExternalLink,
-  Play
+  Play,
+  ArrowDown
 } from 'lucide-react';
-
-// --- NEW: Header Logo Component with Fallback ---
-const HeaderLogo = () => {
-  const [imgError, setImgError] = useState(false);
-
-  return (
-    <div className="flex items-center gap-2">
-      {!imgError ? (
-        <img 
-          src="logo.png" 
-          alt="BettingClarity Logo" 
-          className="w-8 h-8 object-contain rounded-lg" 
-          onError={() => setImgError(true)} 
-        />
-      ) : (
-        <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-black">
-          <Workflow className="w-5 h-5" />
-        </div>
-      )}
-      <span className="text-white font-bold text-xl tracking-tight">BettingClarity</span>
-    </div>
-  );
-};
 
 // --- NEW: Video Modal Component ---
 const VideoModal = ({ isOpen, onClose, videoId }) => {
@@ -239,6 +217,7 @@ const LegalModal = ({ isOpen, onClose, title, src }) => {
 
 const Hero = ({ onWatchVideo }) => {
   const scrollToPricing = () => document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+  const scrollToSolution = () => document.getElementById('solution').scrollIntoView({ behavior: 'smooth' });
 
   return (
     <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex flex-col items-center justify-center min-h-[85vh]">
@@ -262,9 +241,9 @@ const Hero = ({ onWatchVideo }) => {
             Get Started Now
             <ArrowRight size={20} className="ml-2" />
           </Button>
-          <Button variant="secondary" className="h-14 px-8 text-lg bg-[#0a0a0a] hover:bg-[#1a1a1a]" onClick={onWatchVideo}>
-            <PlayCircle size={20} className="mr-2" />
-            Watch How It Works
+          <Button variant="secondary" className="h-14 px-8 text-lg bg-[#0a0a0a] hover:bg-[#1a1a1a]" onClick={scrollToSolution}>
+            <ArrowDown size={20} className="mr-2" />
+            Learn More
           </Button>
         </div>
 
@@ -337,7 +316,7 @@ const Problem = () => (
 );
 
 const Solution = () => (
-  <section className="relative pt-4 pb-24 overflow-hidden">
+  <section id="solution" className="relative pt-4 pb-24 overflow-hidden">
     <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-emerald-500/10 blur-[100px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"></div>
 
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1035,7 +1014,7 @@ const AgentSection = () => {
         </div>
 
         {/* Master Strategy Report Screenshot Placeholder */}
-        <div className="mt-24 relative mx-auto max-w-6xl group">
+        <div className="mt-12 relative mx-auto max-w-6xl group">
             <div className="absolute -inset-1 bg-gradient-to-t from-emerald-500/20 via-emerald-500/5 to-transparent rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
             <div className="relative rounded-2xl border border-white/10 bg-[#050505] overflow-hidden shadow-2xl">
                 {/* Mock Browser Header */}
@@ -1809,7 +1788,12 @@ const App = () => {
       
       <nav className="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <HeaderLogo />
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-black">
+              <Workflow className="w-5 h-5" />
+            </div>
+            <span className="text-white font-bold text-xl tracking-tight">BettingClarity</span>
+          </div>
           <Button 
             variant="primary" 
             className="hidden sm:flex !py-2.5 !px-6 text-sm !font-bold"

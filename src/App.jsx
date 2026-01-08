@@ -49,6 +49,29 @@ import {
   Play
 } from 'lucide-react';
 
+// --- NEW: Header Logo Component with Fallback ---
+const HeaderLogo = () => {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <div className="flex items-center gap-2">
+      {!imgError ? (
+        <img 
+          src="logo.png" 
+          alt="BettingClarity Logo" 
+          className="w-8 h-8 object-contain rounded-lg" 
+          onError={() => setImgError(true)} 
+        />
+      ) : (
+        <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-black">
+          <Workflow className="w-5 h-5" />
+        </div>
+      )}
+      <span className="text-white font-bold text-xl tracking-tight">BettingClarity</span>
+    </div>
+  );
+};
+
 // --- NEW: Video Modal Component ---
 const VideoModal = ({ isOpen, onClose, videoId }) => {
   if (!isOpen) return null;
@@ -1786,10 +1809,7 @@ const App = () => {
       
       <nav className="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src="logo.png" alt="BettingClarity Logo" className="w-8 h-8 object-contain rounded-lg" />
-            <span className="text-white font-bold text-xl tracking-tight">BettingClarity</span>
-          </div>
+          <HeaderLogo />
           <Button 
             variant="primary" 
             className="hidden sm:flex !py-2.5 !px-6 text-sm !font-bold"

@@ -57,7 +57,7 @@ const HeaderLogo = () => {
     <div className="flex items-center gap-2">
       {!imgError ? (
         <img 
-          src="/logo.png" 
+          src="logo.png" 
           alt="BettingClarity Logo" 
           className="w-8 h-8 object-contain rounded-lg" 
           onError={() => setImgError(true)} 

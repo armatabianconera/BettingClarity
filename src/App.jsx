@@ -228,7 +228,7 @@ const Hero = ({ onWatchVideo }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
         
         {/* Headline */}
-           <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1]">
+           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tighter mb-40 leading-[1.1]">
         Stop Guessing. <br className="hidden md:block" />
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-200 to-white">
           Start Deciding.
@@ -305,8 +305,9 @@ const Problem = () => (
             It’s unmanaged decisions.
           </span>
         </h2>
-        <p className="text-2xl md:text-3xl text-zinc-300 max-w-4xl mx-auto leading-relaxed font-light">
-          Most bettors don’t lose because they lack information- they lose because they lack a system to control decisions under pressure.
+        <p className="text-sm md:text-base text-white/60 max-w-2xl mx-auto leading-relaxed font-normal">
+          Most bettors don’t lose due to lack of information. <br className="hidden md:block" />
+          They lose because they lack a system under pressure.
         </p>
       </div>
     </div>
@@ -358,7 +359,7 @@ const Solution = () => (
             <strong>BettingClarity</strong> isn’t a magic crystal ball. It’s a decision control system built on your own betting history.
           </p>
           <p className="text-lg text-zinc-400 mb-6 leading-relaxed">
-            Once you start logging your bets and decisions, BettingClarity analyzes your real behavior — not theory. Based on your matches, timing, emotions, and decision quality, the system generates brutally honest performance reports that show:
+            Once you start logging your bets and decisions, BettingClarity analyzes your real behavior - not theory. Based on your matches, timing, emotions, and decision quality, the system generates brutally honest performance reports that show:
           </p>
           <ul className="list-disc pl-5 text-zinc-400 mb-8 space-y-1">
              <li>where you consistently lose clarity</li>
@@ -409,7 +410,7 @@ const Solution = () => (
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black font-bold text-sm shadow-[0_0_15px_rgba(255,255,255,0.2)] flex-shrink-0">3</div>
                   <div className="ml-4">
                     <div className="text-white font-bold tracking-wide mb-1">Clear Direction</div>
-                    <p className="text-zinc-500 text-sm">You receive concrete, actionable directives — what to reduce, what to avoid, and what to fix next.</p>
+                    <p className="text-zinc-500 text-sm">You receive concrete, actionable directives - what to reduce, what to avoid, and what to fix next.</p>
                 </div>
               </div>
             </div>
@@ -551,7 +552,7 @@ const AgentSection = () => {
     {
       id: 'leak',
       title: "Leak Detector",
-      desc: "Identifies patterns that consistently cost you money — markets, timing, or behaviors you repeat without noticing.",
+      desc: "Identifies patterns that consistently cost you money - markets, timing, or behaviors you repeat without noticing.",
       icon: Search,
       color: "text-red-500",
       bg: "bg-red-500/10 border-red-500/20"

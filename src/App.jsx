@@ -451,373 +451,75 @@ const Solution = () => (
 const ReportModal = ({ isOpen, onClose, type }) => {
   if (!isOpen) return null;
 
-  // --- Reusable UI Components for Reports ---
-  
-  const MetricCard = ({ label, value, trend, trendUp, prefix = "" }) => (
-    <div className="bg-[#141414] border border-white/5 p-4 rounded-xl flex flex-col justify-between h-24 relative overflow-hidden group">
-      <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-        <BarChart3 className="w-8 h-8 text-zinc-500" />
-      </div>
-      <span className="text-zinc-500 text-xs font-medium uppercase tracking-wider">{label}</span>
-      <div className="flex items-end gap-2">
-        <span className="text-2xl font-bold text-white tracking-tight">{prefix}{value}</span>
-        {trend && (
-          <span className={`text-xs font-bold mb-1 ${trendUp ? 'text-emerald-500' : 'text-red-500'}`}>
-            {trend}
-          </span>
-        )}
-      </div>
-    </div>
-  );
+  // Define titles based on type
+  const titles = {
+    leak: "Leak Detector Report",
+    pattern: "Pattern Finder Report",
+    psych: "Psych Audit Report",
+    weekly: "Weekly Tactical Review",
+    market: "Market Efficiency Report",
+    timing: "Timing Analysis Report",
+    odds: "Odds Range Report",
+    league: "League Audit Report"
+  };
 
-  const RecommendationCard = ({ type, title, subtitle, icon: Icon, actionLabel }) => (
-    <div className="bg-[#141414] border border-white/5 rounded-xl p-4 flex gap-4 items-start hover:border-emerald-500/20 transition-colors group cursor-pointer">
-      <div className={`p-3 rounded-lg flex-shrink-0 ${type === 'video' ? 'bg-blue-500/10 text-blue-500' : 'bg-purple-500/10 text-purple-500'}`}>
-        <Icon className="w-5 h-5" />
-      </div>
-      <div className="flex-grow">
-        <div className="flex justify-between items-start">
-          <span className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${type === 'video' ? 'text-blue-500' : 'text-purple-500'}`}>
-            {type === 'video' ? 'Recommended Module' : 'System Prompt'}
-          </span>
-        </div>
-        <h4 className="text-white font-bold text-sm mb-1 group-hover:text-emerald-400 transition-colors">{title}</h4>
-        <p className="text-zinc-500 text-xs leading-relaxed mb-3">{subtitle}</p>
-        <div className="flex items-center text-xs font-medium text-zinc-400 group-hover:text-white transition-colors">
-          {actionLabel} <ArrowRight className="w-3 h-3 ml-1" />
-        </div>
-      </div>
-    </div>
-  );
-
-  let content = null;
-  let headerTitle = "";
-  let headerSubtitle = "";
-  let headerIcon = null;
-
-  switch (type) {
-    case 'weekly':
-      headerTitle = "Weekly Tactical Review";
-      headerSubtitle = "Week 42 • Oct 14 - Oct 20";
-      headerIcon = <ClipboardCheck className="w-6 h-6 text-emerald-500" />;
-      content = (
-        <div className="space-y-8 animate-fade-in">
-          {/* KPI Strip */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <MetricCard label="Total Bets" value="42" trend="+12" trendUp={false} />
-            <MetricCard label="Win Rate" value="38.5%" trend="-4.2%" trendUp={false} />
-            <MetricCard label="Turnover" value="2,450" prefix="€" />
-            <MetricCard label="Net Profit" value="-320" prefix="€" trend="Drawdown" trendUp={false} />
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Left Column: Diagnosis (2 cols wide) */}
-            <div className="md:col-span-2 space-y-6">
-              <div className="bg-[#141414] border border-white/5 rounded-xl p-6">
-                <h4 className="text-white font-bold text-lg mb-4 flex items-center">
-                  <Search className="w-5 h-5 mr-2 text-zinc-500" />
-                  Performance Audit
-                </h4>
-                
-                <div className="space-y-4">
-                  <div className="p-4 rounded-lg bg-red-500/5 border border-red-500/10">
-                    <div className="flex items-start gap-3">
-                      <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <h5 className="text-red-400 font-bold text-sm">Volume Warning: Overtrading</h5>
-                        <p className="text-zinc-400 text-sm mt-1 leading-relaxed">
-                          You placed <strong>42 bets</strong> this week, which is <strong>85% higher</strong> than your profitable average (22 bets). 
-                          Analysis shows a sharp decline in ROI (-18%) on bets placed after 8:00 PM, suggesting fatigue/boredom betting.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-4 rounded-lg bg-zinc-900 border border-white/5">
-                    <h5 className="text-white font-bold text-sm mb-2">Market Breakdown</h5>
-                    <div className="space-y-3">
-                      <div>
-                        <div className="flex justify-between text-xs text-zinc-400 mb-1">
-                          <span>Pre-Match (Structured)</span>
-                          <span className="text-emerald-500">+12.5% ROI</span>
-                        </div>
-                        <div className="w-full bg-zinc-800 h-1.5 rounded-full">
-                          <div className="bg-emerald-500 h-1.5 rounded-full w-[65%]"></div>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="flex justify-between text-xs text-zinc-400 mb-1">
-                          <span>Live In-Play (Impulse)</span>
-                          <span className="text-red-500">-28.4% ROI</span>
-                        </div>
-                        <div className="w-full bg-zinc-800 h-1.5 rounded-full">
-                          <div className="bg-red-500 h-1.5 rounded-full w-[35%]"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-[#141414] border border-white/5 rounded-xl p-6">
-                 <h4 className="text-white font-bold text-lg mb-4">The Fix for Next Week</h4>
-                 <ul className="space-y-3">
-                   <li className="flex items-start text-zinc-300 text-sm">
-                     <CheckCircle className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />
-                     <span><strong>Hard Limit:</strong> Maximum 3 bets per day. Once you hit 3, the app locks for 24h.</span>
-                   </li>
-                   <li className="flex items-start text-zinc-300 text-sm">
-                     <CheckCircle className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />
-                     <span><strong>Protocol Change:</strong> Disable all "Live Betting" markets in your dashboard filters.</span>
-                   </li>
-                 </ul>
-              </div>
-            </div>
-
-            {/* Right Column: Recommendations (1 col wide) */}
-            <div className="space-y-4">
-              <h4 className="text-zinc-500 font-bold text-xs uppercase tracking-wider mb-2">Recommended Actions</h4>
-              
-              <RecommendationCard 
-                type="video"
-                icon={Play}
-                title="The Volume Trap"
-                subtitle="Why betting more feels like working harder, but actually destroys your edge."
-                actionLabel="Watch Module (12m)"
-              />
-
-              <RecommendationCard 
-                type="prompt"
-                icon={Bot}
-                title="The 'Wait-for-Break' Filter"
-                subtitle="Use this prompt before every live bet to force a 2-minute logic check."
-                actionLabel="Copy to Clipboard"
-              />
-
-              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 mt-6">
-                <h5 className="text-emerald-400 font-bold text-sm mb-2">Weekly Grade</h5>
-                <div className="flex items-baseline gap-2">
-                   <span className="text-4xl font-bold text-white">C-</span>
-                   <span className="text-zinc-500 text-xs">Needs Improvement</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-      break;
-
-    case 'leak':
-      headerTitle = "Leak Detector Report";
-      headerSubtitle = "Live Analysis • Last 50 Bets";
-      headerIcon = <AlertTriangle className="w-6 h-6 text-red-500" />;
-      content = (
-        <div className="space-y-8 animate-fade-in">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <MetricCard label="Leak Impact" value="-€450" trend="Critical" trendUp={false} />
-            <MetricCard label="Occurrence" value="18%" prefix="" />
-            <MetricCard label="Avg Stake" value="€50" prefix="" />
-            <MetricCard label="Potential ROI" value="+12%" prefix="" trend="If fixed" trendUp={true} />
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="md:col-span-2 space-y-6">
-               <div className="bg-[#141414] border border-white/5 rounded-xl p-6 relative overflow-hidden">
-                 <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 blur-[50px] rounded-full -mr-10 -mt-10"></div>
-                 <h4 className="text-white font-bold text-lg mb-2 relative z-10">Identified Leak: "Late Chase"</h4>
-                 <p className="text-zinc-400 text-sm leading-relaxed relative z-10">
-                   You have a systematic tendency to place bets in the <strong>75th-90th minute</strong> of football matches when you are currently down for the day. 
-                   These bets have a <strong>negative expected value (-18% EV)</strong> compared to your pre-match bets (+8% EV).
-                 </p>
-                 <div className="mt-6 grid grid-cols-2 gap-4 relative z-10">
-                    <div className="bg-black/40 p-3 rounded border border-white/5">
-                      <span className="text-zinc-500 text-xs block mb-1">Win Rate (0-75 min)</span>
-                      <span className="text-emerald-500 font-bold">54%</span>
-                    </div>
-                    <div className="bg-black/40 p-3 rounded border border-red-500/20">
-                      <span className="text-zinc-500 text-xs block mb-1">Win Rate (75-90 min)</span>
-                      <span className="text-red-500 font-bold">28%</span>
-                    </div>
-                 </div>
-               </div>
-            </div>
-
-            <div className="space-y-4">
-               <h4 className="text-zinc-500 font-bold text-xs uppercase tracking-wider mb-2">The Solution</h4>
-               <RecommendationCard 
-                type="prompt"
-                icon={Bot}
-                title="End-Game Blocker"
-                subtitle="A specific logic-gate prompt to run before any bet after the 70th minute."
-                actionLabel="Copy Prompt"
-              />
-               <RecommendationCard 
-                type="video"
-                icon={Play}
-                title="Chasing Losses Psychology"
-                subtitle="Understanding the dopamine loop of late-game betting."
-                actionLabel="Watch Video"
-              />
-            </div>
-          </div>
-        </div>
-      );
-      break;
-
-    case 'pattern':
-        headerTitle = "Pattern Finder";
-        headerSubtitle = "Behavioral Correlation • 30 Day Lookback";
-        headerIcon = <BrainCircuit className="w-6 h-6 text-blue-500" />;
-        content = (
-          <div className="space-y-8 animate-fade-in">
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <MetricCard label="Pattern Str" value="High" prefix="" />
-              <MetricCard label="Sample Size" value="120" prefix="" />
-              <MetricCard label="Profit Diff" value="€780" prefix="" trend="Significant" trendUp={true} />
-              <MetricCard label="Confidence" value="92%" prefix="" />
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-               <div className="md:col-span-2 bg-[#141414] border border-white/5 rounded-xl p-6">
-                 <h4 className="text-white font-bold text-lg mb-4">The "Underdog" Advantage</h4>
-                 <p className="text-zinc-400 text-sm mb-6 leading-relaxed">
-                   Analysis confirms a massive disparity in your results based on odds range. You are highly profitable when betting on 
-                   outcomes priced <strong>2.50 to 4.00</strong>, but you consistently lose money on "safe" bets priced <strong>1.20 to 1.50</strong>.
-                 </p>
-                 
-                 <div className="space-y-4">
-                   <div className="flex items-center gap-4">
-                      <span className="w-24 text-xs text-zinc-500 text-right">Odds 2.50+</span>
-                      <div className="flex-grow bg-zinc-800 h-8 rounded-md relative overflow-hidden">
-                        <div className="absolute top-0 left-0 h-full bg-blue-500/50 flex items-center px-3 text-xs font-bold text-white w-[80%]">
-                           + €1,250 Profit
-                        </div>
-                      </div>
-                   </div>
-                   <div className="flex items-center gap-4">
-                      <span className="w-24 text-xs text-zinc-500 text-right">Odds &lt;1.50</span>
-                      <div className="flex-grow bg-zinc-800 h-8 rounded-md relative overflow-hidden">
-                        <div className="absolute top-0 left-0 h-full bg-red-500/50 flex items-center px-3 text-xs font-bold text-white w-[40%]">
-                           - €470 Loss
-                        </div>
-                      </div>
-                   </div>
-                 </div>
-               </div>
-
-               <div className="space-y-4">
-                 <h4 className="text-zinc-500 font-bold text-xs uppercase tracking-wider mb-2">Strategy Adjustment</h4>
-                 <RecommendationCard 
-                    type="video"
-                    icon={Play}
-                    title="The Favorite Fallacy"
-                    subtitle="Why high strike rate doesn't mean high profit."
-                    actionLabel="Watch Lesson"
-                  />
-                  <div className="bg-zinc-900 border border-white/5 p-4 rounded-xl">
-                    <h5 className="text-white font-bold text-sm mb-2">Next Step</h5>
-                    <p className="text-zinc-500 text-xs">Filter your dashboard to show ONLY odds &gt; 2.00 for the next 7 days.</p>
-                  </div>
-               </div>
-            </div>
-          </div>
-        );
-        break;
-
-    case 'psych':
-        headerTitle = "Psych Audit";
-        headerSubtitle = "Emotional State & Tilt Analysis";
-        headerIcon = <ActivityIcon className="w-6 h-6 text-orange-500" />;
-        content = (
-          <div className="space-y-8 animate-fade-in">
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <MetricCard label="Tilt Risk" value="72%" prefix="" trend="High Warning" trendUp={false} />
-              <MetricCard label="Avg Sentiment" value="Neg" prefix="" />
-              <MetricCard label="Forced Bets" value="5" prefix="" />
-              <MetricCard label="Sleep Score" value="4.2" prefix="" trend="Low" trendUp={false} />
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-               <div className="md:col-span-2 space-y-6">
-                 <div className="bg-[#141414] border border-white/5 rounded-xl p-6">
-                    <h4 className="text-white font-bold text-lg mb-4">Trigger Event Detected</h4>
-                    <p className="text-zinc-400 text-sm mb-4 leading-relaxed">
-                       You flagged 3 bets as "Revenge" in your journal this week. All 3 occurred immediately after a VAR decision went against you.
-                       This indicates a specific trigger: <strong>Unfair Variance.</strong>
-                    </p>
-                    <div className="bg-orange-500/10 border border-orange-500/20 p-4 rounded-lg flex items-center gap-4">
-                       <div className="text-2xl">😡</div>
-                       <div>
-                         <p className="text-orange-400 font-bold text-sm">The "Injustice" Tilt</p>
-                         <p className="text-orange-500/70 text-xs">You tend to double stakes when you feel the result was "unfair".</p>
-                       </div>
-                    </div>
-                 </div>
-               </div>
-
-               <div className="space-y-4">
-                 <h4 className="text-zinc-500 font-bold text-xs uppercase tracking-wider mb-2">Mental Defense</h4>
-                 <RecommendationCard 
-                    type="video"
-                    icon={Play}
-                    title="Accepting Variance"
-                    subtitle="How to detach your ego from the result."
-                    actionLabel="Start Module"
-                  />
-                  <RecommendationCard 
-                    type="prompt"
-                    icon={Bot}
-                    title="The Cool-Down Script"
-                    subtitle="Required 15min break script after any 'Bad Beat' tag."
-                    actionLabel="View Protocol"
-                  />
-               </div>
-            </div>
-          </div>
-        );
-        break;
-
-    default:
-      content = <div className="text-zinc-500">No report data found.</div>;
-  }
+  const title = titles[type] || "Report Preview";
+  // File naming convention: report-leak.png, report-weekly.png, etc.
+  const imageSrc = `report-${type}.png`; 
 
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center px-4">
       <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" onClick={onClose}></div>
       
-      {/* Main Modal Container - Wider and more 'Dashboard' like */}
-      <div className="relative bg-[#0a0a0a] border border-zinc-800 rounded-2xl w-full max-w-5xl max-h-[90vh] shadow-2xl animate-fade-in flex flex-col overflow-hidden">
+      {/* Main Modal Container - Wide for Screenshots */}
+      <div className="relative bg-[#0a0a0a] border border-zinc-800 rounded-2xl w-full max-w-6xl max-h-[90vh] shadow-2xl animate-fade-in flex flex-col overflow-hidden">
         
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/5 bg-[#0f0f0f]">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center shadow-inner">
-               {headerIcon}
+            <div className="w-10 h-10 rounded-xl bg-[#1a1a1a] border border-white/5 flex items-center justify-center shadow-inner">
+               <FileText className="w-5 h-5 text-emerald-500" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white tracking-tight">{headerTitle}</h3>
-              {headerSubtitle && <p className="text-sm text-zinc-500 font-medium">{headerSubtitle}</p>}
+              <h3 className="text-lg font-bold text-white tracking-tight">{title}</h3>
+              <p className="text-xs text-zinc-500 font-medium">Full Report Preview</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
-             <button className="hidden md:flex items-center gap-2 px-4 py-2 bg-[#1a1a1a] hover:bg-[#252525] border border-white/5 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition-colors">
-               <Copy className="w-4 h-4" /> Export PDF
-             </button>
              <button onClick={onClose} className="p-2 text-zinc-500 hover:text-white hover:bg-white/5 rounded-lg transition-all">
                <X className="w-6 h-6"/>
              </button>
           </div>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar bg-[#0a0a0a]">
-          {content}
+        {/* Image Content Area */}
+        <div className="flex-grow bg-[#050505] relative overflow-y-auto custom-scrollbar flex items-center justify-center min-h-[400px]">
+           <img 
+             src={imageSrc} 
+             alt={`${title} Screenshot`} 
+             className="w-full h-auto object-contain"
+             onError={(e) => {
+               // Fallback if image doesn't exist yet
+               e.target.onerror = null; 
+               e.target.style.display = 'none';
+               e.target.nextSibling.style.display = 'flex';
+             }}
+           />
+           
+           {/* Fallback Placeholder (Hidden if image loads) */}
+           <div className="absolute inset-0 hidden flex-col items-center justify-center text-zinc-600 bg-[#0a0a0a]" style={{ display: 'none' }}>
+              <div className="w-20 h-20 border-2 border-dashed border-zinc-800 rounded-xl flex items-center justify-center mb-4">
+                <FileText className="w-8 h-8 opacity-50" />
+              </div>
+              <p className="text-sm font-mono">Image missing: {imageSrc}</p>
+              <p className="text-xs mt-2 text-zinc-700">Please upload a screenshot for this report.</p>
+           </div>
         </div>
 
         {/* Footer Actions */}
         <div className="p-6 border-t border-white/5 bg-[#0f0f0f] flex justify-between items-center">
-           <div className="text-xs text-zinc-600 font-mono">Report ID: #8292-XJ</div>
-           <Button onClick={onClose} className="py-3 px-8 text-sm">Close Report</Button>
+           <div className="text-xs text-zinc-600 font-mono">Generated by BettingClarity AI</div>
+           <Button onClick={onClose} className="py-2.5 px-6 text-sm">Close Preview</Button>
         </div>
       </div>
     </div>
@@ -844,6 +546,73 @@ const ActivityIcon = (props) => (
 
 const AgentSection = () => {
   const [activeReport, setActiveReport] = useState(null);
+
+  const reports = [
+    {
+      id: 'leak',
+      title: "Leak Detector",
+      desc: "Identifies patterns that consistently cost you money — markets, timing, or behaviors you repeat without noticing.",
+      icon: Search,
+      color: "text-red-500",
+      bg: "bg-red-500/10 border-red-500/20"
+    },
+    {
+      id: 'pattern',
+      title: "Pattern Finder",
+      desc: "Discover hidden correlations. Do you win more on Underdogs? Do you lose on Fridays?",
+      icon: BrainCircuit,
+      color: "text-blue-500",
+      bg: "bg-blue-500/10 border-blue-500/20"
+    },
+    {
+      id: 'psych',
+      title: "Psych Audit",
+      desc: "Shows when emotion, tilt, or pressure influence your decisions more than logic. Protects your mental capital.",
+      icon: ActivityIcon,
+      color: "text-orange-500",
+      bg: "bg-orange-500/10 border-orange-500/20"
+    },
+    {
+      id: 'weekly',
+      title: "Weekly Review",
+      desc: "Clear directives for next week: reduce volume, avoid specific setups, or enforce PASS discipline.",
+      icon: ClipboardCheck,
+      color: "text-purple-500",
+      bg: "bg-purple-500/10 border-purple-500/20"
+    },
+    {
+      id: 'market',
+      title: "Market Efficiency",
+      desc: "Analyze your ROI across different markets (1X2, Asian Handicap, Over/Under). See where your edge is real.",
+      icon: BarChart3,
+      color: "text-emerald-500",
+      bg: "bg-emerald-500/10 border-emerald-500/20"
+    },
+    {
+      id: 'timing',
+      title: "Timing Analysis",
+      desc: "Compare your Opening Line vs Closing Line value (CLV) and track your in-play entry timing success.",
+      icon: Clock,
+      color: "text-cyan-500",
+      bg: "bg-cyan-500/10 border-cyan-500/20"
+    },
+    {
+      id: 'odds',
+      title: "Odds Range",
+      desc: "Find your profitability sweet spot. Are you losing value on 'safe' low odds or chasing high-risk longshots?",
+      icon: Target,
+      color: "text-pink-500",
+      bg: "bg-pink-500/10 border-pink-500/20"
+    },
+    {
+      id: 'league',
+      title: "League Audit",
+      desc: "See which competitions are draining your bankroll. Stop betting on leagues where you have no edge.",
+      icon: Database,
+      color: "text-yellow-500",
+      bg: "bg-yellow-500/10 border-yellow-500/20"
+    }
+  ];
 
   return (
     <section className="relative py-24 bg-[#0a0a0a] border-y border-white/5">
@@ -901,73 +670,26 @@ const AgentSection = () => {
           </div>
         </div>
 
-        {/* 4 Report Cards Grid */}
+        {/* 8 Report Cards Grid (UPDATED) */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          
-          <Card 
-            className="flex flex-col items-center text-center p-6 hover:bg-[#18181b] group h-full"
-            onClick={() => setActiveReport('leak')}
-          >
-            <div className="w-14 h-14 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <Search className="w-7 h-7 text-red-500" />
-            </div>
-            <h3 className="text-lg font-bold text-white mb-2">Leak Detector</h3>
-            <p className="text-zinc-500 text-xs leading-relaxed mb-6 flex-grow">
-              Identifies patterns that consistently cost you money — markets, timing, or behaviors you repeat without noticing.
-            </p>
-            <Button variant="outline" className="w-full text-xs py-2 h-auto border-dashed border-zinc-700 mt-auto">
-              Generate Preview
-            </Button>
-          </Card>
-
-          <Card 
-            className="flex flex-col items-center text-center p-6 hover:bg-[#18181b] group h-full"
-            onClick={() => setActiveReport('pattern')}
-          >
-            <div className="w-14 h-14 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <BrainCircuit className="w-7 h-7 text-blue-500" />
-            </div>
-            <h3 className="text-lg font-bold text-white mb-2">Pattern Finder</h3>
-            <p className="text-zinc-500 text-xs leading-relaxed mb-6 flex-grow">
-              Discover hidden correlations in your game. Do you win more on Underdogs? Do you lose on Fridays?
-            </p>
-            <Button variant="outline" className="w-full text-xs py-2 h-auto border-dashed border-zinc-700 mt-auto">
-              Generate Preview
-            </Button>
-          </Card>
-
-          <Card 
-            className="flex flex-col items-center text-center p-6 hover:bg-[#18181b] group h-full"
-            onClick={() => setActiveReport('psych')}
-          >
-            <div className="w-14 h-14 rounded-full bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <ActivityIcon className="w-7 h-7 text-orange-500" />
-            </div>
-            <h3 className="text-lg font-bold text-white mb-2">Psych Audit</h3>
-            <p className="text-zinc-500 text-xs leading-relaxed mb-6 flex-grow">
-              Shows when emotion, tilt, or pressure influence your decisions more than logic. Protects your mental capital.
-            </p>
-            <Button variant="outline" className="w-full text-xs py-2 h-auto border-dashed border-zinc-700 mt-auto">
-              Generate Preview
-            </Button>
-          </Card>
-
-          <Card 
-            className="flex flex-col items-center text-center p-6 hover:bg-[#18181b] group h-full"
-            onClick={() => setActiveReport('weekly')}
-          >
-            <div className="w-14 h-14 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-              <ClipboardCheck className="w-7 h-7 text-purple-500" />
-            </div>
-            <h3 className="text-lg font-bold text-white mb-2">Weekly Review</h3>
-            <p className="text-zinc-500 text-xs leading-relaxed mb-6 flex-grow">
-              Clear directives for next week: reduce volume, avoid specific setups, or enforce PASS discipline.
-            </p>
-            <Button variant="outline" className="w-full text-xs py-2 h-auto border-dashed border-zinc-700 mt-auto">
-              Generate Preview
-            </Button>
-          </Card>
-
+          {reports.map((report) => (
+            <Card 
+              key={report.id}
+              className="flex flex-col items-center text-center p-6 hover:bg-[#18181b] group h-full"
+              onClick={() => setActiveReport(report.id)}
+            >
+              <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform ${report.bg}`}>
+                <report.icon className={`w-7 h-7 ${report.color}`} />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">{report.title}</h3>
+              <p className="text-zinc-500 text-xs leading-relaxed mb-6 flex-grow">
+                {report.desc}
+              </p>
+              <Button variant="outline" className="w-full text-xs py-2 h-auto border-dashed border-zinc-700 mt-auto hover:border-emerald-500/50 hover:text-emerald-400">
+                View Report
+              </Button>
+            </Card>
+          ))}
         </div>
 
         {/* Master Strategy & Course Integration Info */}

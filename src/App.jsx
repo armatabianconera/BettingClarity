@@ -50,6 +50,29 @@ import {
   ArrowDown
 } from 'lucide-react';
 
+// --- NEW: Smart Logo Component (Auto-fallback) ---
+const Logo = () => {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <div className="flex items-center gap-2">
+      {!imgError ? (
+        <img 
+          src="logo.png" 
+          alt="BettingClarity Logo" 
+          className="w-8 h-8 object-contain rounded-lg" 
+          onError={() => setImgError(true)} 
+        />
+      ) : (
+        <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-black">
+          <Workflow className="w-5 h-5" />
+        </div>
+      )}
+      <span className="text-white font-bold text-xl tracking-tight">BettingClarity</span>
+    </div>
+  );
+};
+
 // --- NEW: Video Modal Component ---
 const VideoModal = ({ isOpen, onClose, videoId }) => {
   if (!isOpen) return null;
@@ -220,7 +243,7 @@ const Hero = ({ onWatchVideo }) => {
   const scrollToSolution = () => document.getElementById('solution').scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <section className="relative pt-48 pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex flex-col items-center justify-center min-h-[85vh]">
+    <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex flex-col items-center justify-center min-h-[85vh]">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-[#0a0a0a] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] z-0"></div>
       <div className="blob-green top-0 left-1/2 -translate-x-1/2 opacity-20 blur-[100px] w-[800px] h-[800px] rounded-full z-0"></div>
@@ -228,7 +251,7 @@ const Hero = ({ onWatchVideo }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
         
         {/* Headline */}
-           <h1 className="text-5xl md:text-7xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1]">
+           <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1]">
         Stop Guessing. <br className="hidden md:block" />
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-200 to-white">
           Start Deciding.
@@ -1337,10 +1360,13 @@ const Pricing = () => {
         {/* 3 Main Tiers Grid */}
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start mb-24">
           
-          {/* BASIC */}
+          {/* BASIC (Emerald Subtle) */}
           <div className="relative group h-full">
-            <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-2xl -m-0.5 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="relative p-8 flex flex-col bg-[#0f0f0f] border border-white/10 rounded-2xl h-full hover:bg-[#141414] transition-all duration-300 shadow-xl">
+            {/* Glow */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-60 transition-opacity duration-700"></div>
+            
+            {/* Card Content */}
+            <div className="relative p-8 flex flex-col bg-gradient-to-br from-[#0f0f0f] via-[#0a0a0a] to-black border border-white/10 group-hover:border-emerald-500/20 rounded-2xl h-full transition-all duration-300 shadow-xl">
               <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
                 Basic
               </h3>
@@ -1361,13 +1387,20 @@ const Pricing = () => {
                 <li className="flex text-zinc-500 text-sm"><CheckCircle className="w-4 h-4 text-zinc-700 mr-3 flex-shrink-0" /> No Advanced Prompts</li>
               </ul>
               <Button variant="secondary" className="w-full hover:bg-white hover:text-black transition-colors" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>Start Basic</Button>
+              <p className="mt-4 text-[10px] text-zinc-600 flex items-center justify-center">
+                <ShieldAlert className="w-3 h-3 mr-1.5" />
+                Secure payment via Stripe
+              </p>
             </div>
           </div>
 
-          {/* PRO (Highlighted) */}
+          {/* PRO (Emerald Intense - Highlighted) */}
           <div className="relative group transform md:-translate-y-6 z-10 h-full">
-            <div className="absolute -inset-[1px] bg-gradient-to-b from-emerald-500 to-emerald-900/20 rounded-2xl opacity-70 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
-            <div className="relative p-8 flex flex-col bg-[#0a0a0a] rounded-2xl h-full shadow-2xl border border-white/10">
+            {/* Glow */}
+            <div className="absolute -inset-1 bg-gradient-to-b from-emerald-500/30 to-emerald-900/10 rounded-2xl blur-xl opacity-60 group-hover:opacity-90 transition-opacity duration-500"></div>
+            
+            {/* Card Content */}
+            <div className="relative p-8 flex flex-col bg-gradient-to-br from-[#0a0a0a] via-[#062415] to-black border border-emerald-500/30 rounded-2xl h-full shadow-2xl">
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.4)] whitespace-nowrap">
                 Most Popular
               </div>
@@ -1385,7 +1418,7 @@ const Pricing = () => {
                  {billing === 'yearly' && <p className="text-xs text-emerald-400 font-medium bg-emerald-500/10 inline-block px-2 py-0.5 rounded border border-emerald-500/20">Billed €108 yearly</p>}
               </div>
 
-              <p className="text-zinc-300 text-sm mb-8 border-b border-white/5 pb-6">The complete system. Full access to AI & Prompts.</p>
+              <p className="text-zinc-300 text-sm mb-8 border-b border-emerald-500/10 pb-6">The complete system. Full access to AI & Prompts.</p>
               
               <ul className="space-y-4 mb-10 flex-grow">
                 <li className="flex text-white text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0 shadow-[0_0_10px_rgba(52,211,153,0.5)] rounded-full" /> <strong>Unlimited Journal</strong></li>
@@ -1399,14 +1432,20 @@ const Pricing = () => {
               <Button variant="primary" className="w-full py-4 text-lg shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)] hover:shadow-[0_0_40px_-5px_rgba(16,185,129,0.5)]" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>
                 Get Clarity Now
               </Button>
-              <p className="mt-4 text-[10px] text-zinc-500 text-center">30-day money-back guarantee.</p>
+              <p className="mt-4 text-[10px] text-zinc-500 flex items-center justify-center">
+                <ShieldAlert className="w-3 h-3 mr-1.5" />
+                Secure payment via Stripe
+              </p>
             </div>
           </div>
 
-          {/* FOUNDER */}
+          {/* FOUNDER (Purple Noble) */}
           <div className="relative group h-full">
-            <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-transparent rounded-2xl -m-0.5 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="relative p-8 flex flex-col bg-[#0f0f0f] border border-white/10 rounded-2xl h-full hover:bg-[#141414] transition-all duration-300 shadow-xl">
+            {/* Glow */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 to-indigo-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-60 transition-opacity duration-700"></div>
+            
+            {/* Card Content */}
+            <div className="relative p-8 flex flex-col bg-gradient-to-br from-[#0f0f0f] via-[#1a0b1a] to-black border border-white/10 group-hover:border-purple-500/30 rounded-2xl h-full transition-all duration-300 shadow-xl">
               <h3 className="text-xl font-bold text-white mb-2">Founder</h3>
               <div className="flex items-baseline gap-1 mb-1">
                 <span className="text-4xl font-bold text-white tracking-tighter">€{billing === 'yearly' ? '24' : '49'}</span>
@@ -1421,45 +1460,69 @@ const Pricing = () => {
               <ul className="space-y-4 mb-8 flex-grow">
                 <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-3 flex-shrink-0" /> <strong>Everything in Pro</strong></li>
                 <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-3 flex-shrink-0" /> Advanced Analytics (16 reps)</li>
-                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-3 flex-shrink-0" /> Historical Deep Audits</li>
-                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-3 flex-shrink-0" /> Priority Processing</li>
-                <li className="flex text-zinc-300 text-sm"><Zap className="w-4 h-4 text-purple-500 mr-3 flex-shrink-0" /> Early Feature Access</li>
+                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" /> Historical Deep Audits</li>
+                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" /> Priority Processing</li>
+                <li className="flex text-zinc-300 text-sm"><Zap className="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" /> Early Feature Access</li>
               </ul>
-              <Button variant="outline" className="w-full border-purple-500/30 text-purple-400 hover:bg-purple-500/10 hover:border-purple-500/60" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>Become a Founder</Button>
+              <Button variant="outline" className="w-full border-purple-500/30 text-purple-400 hover:bg-purple-500/10 hover:border-purple-500/60 transition-colors" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>Become a Founder</Button>
+              <p className="mt-4 text-[10px] text-zinc-600 flex items-center justify-center">
+                <ShieldAlert className="w-3 h-3 mr-1.5" />
+                Secure payment via Stripe
+              </p>
             </div>
           </div>
 
         </div>
 
-        {/* LIFETIME (Unchanged style, just refined background) */}
-        <div className="max-w-4xl mx-auto">
-           <div className="relative bg-gradient-to-r from-[#1a1a1a] to-[#0f0f0f] border border-white/10 rounded-2xl p-8 md:p-12 overflow-hidden shadow-2xl group hover:border-emerald-500/30 transition-all duration-500">
-             <div className="absolute top-0 right-0 bg-emerald-900/30 text-emerald-400 text-xs font-bold px-4 py-1.5 rounded-bl uppercase tracking-widest border-b border-l border-emerald-500/20">Limited Spots</div>
+        {/* LIFETIME - FANCY EDITION (Preserved) */}
+        <div className="max-w-4xl mx-auto relative group">
+           {/* Gold Glow Effect behind the card */}
+           <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/20 to-yellow-600/20 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-700"></div>
+           
+           <div className="relative bg-gradient-to-br from-[#121212] via-[#1a1500] to-black border border-amber-500/30 rounded-2xl p-8 md:p-12 overflow-hidden shadow-2xl transition-all duration-500">
              
-             <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+             {/* Huge Crown Background watermark */}
+             <div className="absolute -right-12 -top-12 text-amber-500/5 rotate-12 pointer-events-none">
+                <Crown size={300} strokeWidth={0.5} />
+             </div>
+
+             {/* Badge */}
+             <div className="absolute top-0 right-0 bg-gradient-to-bl from-amber-500 to-yellow-600 text-black text-xs font-extrabold px-6 py-2 rounded-bl-2xl uppercase tracking-widest shadow-lg shadow-amber-900/20 z-10">
+               VIP Access
+             </div>
+             
+             <div className="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
                <div className="md:w-1/2 text-center md:text-left">
-                  <div className="text-xs font-bold text-emerald-400 mb-3 uppercase tracking-widest bg-emerald-900/20 px-3 py-1 inline-block rounded border border-emerald-500/20">One-Time Payment</div>
-                  <h3 className="text-3xl font-bold text-white mb-2">Founder Lifetime</h3>
+                  <div className="text-xs font-bold text-amber-400 mb-3 uppercase tracking-widest bg-amber-900/20 px-3 py-1 inline-block rounded border border-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+                    One-Time Payment
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight flex items-center justify-center md:justify-start gap-3">
+                    Founder Lifetime <Crown className="w-6 h-6 text-amber-400 fill-amber-400/20" />
+                  </h3>
                   <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                     Skip the monthly fees forever. Get full Founder status, all future updates, and priority contact channel with a single payment.
                   </p>
                   <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
-                      <div className="text-5xl font-bold text-white tracking-tighter">€399</div>
+                      <div className="text-5xl font-bold text-white tracking-tighter drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]">€399</div>
                       <div className="text-2xl text-zinc-600 line-through font-medium">€699</div>
                   </div>
-                  <p className="text-zinc-500 text-xs">Pay once. Own it forever.</p>
+                  <p className="text-amber-500/80 text-xs font-medium">Pay once. Own it forever.</p>
                </div>
 
-               <div className="md:w-1/2 w-full bg-black/20 p-6 rounded-xl border border-white/5">
+               <div className="md:w-1/2 w-full bg-black/40 p-6 rounded-xl border border-amber-500/10 backdrop-blur-sm">
                   <ul className="space-y-3 mb-8">
-                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> <strong>Founder Status Forever</strong></li>
-                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> No Monthly Fees</li>
-                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> All Future Updates Included</li>
-                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> Dedicated Priority Contact</li>
+                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-amber-400 mr-3 flex-shrink-0" /> <strong>Founder Status Forever</strong></li>
+                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-amber-400 mr-3 flex-shrink-0" /> No Monthly Fees</li>
+                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-amber-400 mr-3 flex-shrink-0" /> All Future Updates Included</li>
+                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-amber-400 mr-3 flex-shrink-0" /> Dedicated Priority Contact</li>
                   </ul>
-                  <Button variant="outline" className="w-full py-4 border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.1)] font-bold" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>
+                  <Button className="w-full py-4 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-black border-none shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] font-bold" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>
                     Get Lifetime Access
                   </Button>
+                  <p className="mt-4 text-[10px] text-zinc-500 flex items-center justify-center">
+                    <ShieldAlert className="w-3 h-3 mr-1.5" />
+                    Secure payment via Stripe
+                  </p>
                </div>
              </div>
           </div>

@@ -1296,122 +1296,179 @@ const ProductDeepDive = () => {
   );
 };
 
-const Pricing = () => (
-  <section id="pricing" className="relative py-20 bg-[#0a0a0a] border-t border-white/5">
-    <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
-    <div className="blob-green top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20 w-[800px] h-[800px]"></div>
-    
-    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <SectionHeading title="Choose Your Clarity Level." subtitle="Professional tools. Flexible plans. Cancel anytime." />
+const Pricing = () => {
+  const [billing, setBilling] = useState('yearly');
+
+  return (
+    <section id="pricing" className="relative py-24 bg-[#0a0a0a] border-t border-white/5 overflow-hidden">
+      {/* Background Ambience */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
+      <div className="blob-green top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 w-[1000px] h-[1000px] blur-[120px]"></div>
       
-      {/* 3 Main Tiers Grid */}
-      <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start mb-24">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeading title="Choose Your Clarity Level." subtitle="Professional tools. Flexible plans. Cancel anytime." />
         
-        {/* BASIC */}
-        <Card className="p-8 flex flex-col bg-[#0a0a0a] border-zinc-800 opacity-90 hover:opacity-100 transition-opacity h-full">
-          <h3 className="text-xl font-bold text-white mb-2">Basic</h3>
-          <div className="text-4xl font-bold text-white mb-2 tracking-tighter">€9<span className="text-sm font-normal text-zinc-500">/mo</span></div>
-          <p className="text-zinc-500 text-sm mb-8">Entry point & habit builder.</p>
-          <ul className="space-y-4 mb-8 flex-grow">
-            <li className="flex text-zinc-400 text-sm"><CheckCircle className="w-4 h-4 text-emerald-500 mr-3 flex-shrink-0" /> Decision Journal (50/mo)</li>
-            <li className="flex text-zinc-400 text-sm"><CheckCircle className="w-4 h-4 text-emerald-500 mr-3 flex-shrink-0" /> Basic Dashboard</li>
-            <li className="flex text-zinc-400 text-sm"><CheckCircle className="w-4 h-4 text-emerald-500 mr-3 flex-shrink-0" /> Limited Reports (1/week)</li>
-            <li className="flex text-zinc-400 text-sm"><CheckCircle className="w-4 h-4 text-emerald-500 mr-3 flex-shrink-0" /> Prompt Library (25+)</li>
-            <li className="flex text-zinc-400 text-sm"><CheckCircle className="w-4 h-4 text-emerald-500 mr-3 flex-shrink-0" /> Premium Education</li>
-          </ul>
-          <Button variant="secondary" className="w-full" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>Start Basic</Button>
-          <p className="mt-4 text-xs text-zinc-600 flex items-center justify-center">
-            <ShieldAlert className="w-3 h-3 mr-1.5" />
-            Secure payment via Stripe
-          </p>
-        </Card>
-
-        {/* PRO */}
-        <Card glow={true} allowOverflow={true} className="p-10 flex flex-col relative bg-[#18181b] border-emerald-500/30 h-full transform md:-translate-y-6 z-10">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-emerald-500 text-black text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(16,185,129,0.5)] whitespace-nowrap z-20">Most Popular</div>
-          <h3 className="text-2xl font-bold text-white mb-2">Pro</h3>
-          <div className="text-5xl font-bold text-white mb-2 tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white to-emerald-200">€19<span className="text-sm font-normal text-zinc-500">/mo</span></div>
-          <p className="text-zinc-400 text-sm mb-8">The real product. Full power.</p>
-          <ul className="space-y-4 mb-10 flex-grow">
-            <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> <strong>Unlimited Journal</strong></li>
-             <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> Full Dashboard</li>
-            <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> <strong>100 AI Reports / month</strong></li>
-            <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> 12 Mega Report Types (History Based)</li>
-            <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> Video Education Package</li>
-            <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> Full Prompt Library (50+)</li>
-             <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> Weekly Tactical Review</li>
-            <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> Market & Timing Audits</li>
-          </ul>
-          <p className="text-center text-xs text-emerald-400/80 mb-4 font-medium">One avoided bad bet covers this.</p>
-          <Button variant="primary" className="w-full" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>Get Clarity Now</Button>
-          <p className="mt-4 text-xs text-zinc-500 flex items-center justify-center">
-            <ShieldAlert className="w-3 h-3 mr-1.5" />
-            Secure payment via Stripe
-          </p>
-        </Card>
-
-        {/* FOUNDER */}
-        <Card className="p-8 flex flex-col bg-[#0a0a0a] border-zinc-800 opacity-90 hover:opacity-100 transition-opacity h-full">
-          <h3 className="text-xl font-bold text-white mb-2">Founder</h3>
-          <div className="text-4xl font-bold text-white mb-2 tracking-tighter">€49<span className="text-sm font-normal text-zinc-500">/mo</span></div>
-          <p className="text-zinc-500 text-sm mb-8">Power users & semi-pros.</p>
-          <ul className="space-y-4 mb-8 flex-grow">
-            <li className="flex text-zinc-400 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-3 flex-shrink-0" /> <strong>Everything in Pro</strong></li>
-            <li className="flex text-zinc-400 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" /> Advanced Analytics (16 reps)</li>
-            <li className="flex text-zinc-400 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" /> Historical Deep Audits</li>
-            <li className="flex text-zinc-400 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" /> Priority Processing</li>
-            <li className="flex text-zinc-400 text-sm"><Zap className="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" /> Early Feature Access</li>
-          </ul>
-          <Button variant="outline" className="w-full" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>Become a Founder</Button>
-          <p className="mt-4 text-xs text-zinc-600 flex items-center justify-center">
-            <ShieldAlert className="w-3 h-3 mr-1.5" />
-            Secure payment via Stripe
-          </p>
-        </Card>
-
-      </div>
-
-      {/* LIFETIME */}
-      <div className="max-w-4xl mx-auto">
-        <div className="relative bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border border-emerald-500/20 rounded-2xl p-8 md:p-12 overflow-hidden shadow-2xl">
-           <div className="absolute top-0 right-0 bg-emerald-900/30 text-emerald-400 text-xs font-bold px-4 py-1.5 rounded-bl uppercase tracking-widest border-b border-l border-emerald-500/20">2026 Early Access</div>
-           
-           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-             <div className="md:w-1/2 text-center md:text-left">
-                <div className="text-xs font-bold text-emerald-400 mb-2 uppercase tracking-widest bg-emerald-900/20 px-2 py-0.5 inline-block rounded border border-emerald-900/50">One-Time Payment</div>
-                <h3 className="text-3xl font-bold text-white mb-2">Founder Lifetime</h3>
-                <p className="text-zinc-400 text-sm leading-relaxed mb-6">
-                  Skip the monthly fees forever. Get full Founder status, all future updates, and priority contact channel with a single payment.
-                </p>
-                <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
-                    <div className="text-5xl font-bold text-white tracking-tighter">€399</div>
-                    <div className="text-2xl text-zinc-600 line-through font-medium">€699</div>
-                </div>
-                <p className="text-zinc-500 text-xs">One-time payment. Lifetime access.</p>
-             </div>
-
-             <div className="md:w-1/2 w-full">
-                <ul className="space-y-3 mb-8">
-                  <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> <strong>Founder Status Forever</strong></li>
-                  <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" /> No Monthly Fees</li>
-                  <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" /> All Future Updates Included</li>
-                  <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" /> Dedicated Priority Contact</li>
-                </ul>
-                <Button variant="outline" className="w-full py-4 border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.1)]" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>
-                  Get Lifetime Access
-                </Button>
-                 <p className="mt-4 text-xs text-zinc-600 flex items-center justify-center">
-                  <ShieldAlert className="w-3 h-3 mr-1.5" />
-                  Secure payment via Stripe
-                </p>
-             </div>
-           </div>
+        {/* Toggle Switch */}
+        <div className="flex justify-center mb-16">
+          <div className="bg-[#121212] p-1.5 rounded-full border border-white/10 flex items-center relative shadow-2xl backdrop-blur-sm">
+            <button
+              onClick={() => setBilling('monthly')}
+              className={`px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 ${
+                billing === 'monthly'
+                  ? 'bg-zinc-800 text-white shadow-lg border border-white/5'
+                  : 'text-zinc-500 hover:text-zinc-300'
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBilling('yearly')}
+              className={`px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${
+                billing === 'yearly'
+                  ? 'bg-emerald-600 text-white shadow-lg border border-emerald-500/20 shadow-emerald-900/20'
+                  : 'text-zinc-500 hover:text-zinc-300'
+              }`}
+            >
+              Yearly <span className="bg-emerald-400/20 text-emerald-300 text-[10px] px-2 py-0.5 rounded-full border border-emerald-400/20 animate-pulse">SAVE 50%</span>
+            </button>
+          </div>
         </div>
+        
+        {/* 3 Main Tiers Grid */}
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start mb-24">
+          
+          {/* BASIC */}
+          <div className="relative group h-full">
+            <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-2xl -m-0.5 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative p-8 flex flex-col bg-[#0f0f0f] border border-white/10 rounded-2xl h-full hover:bg-[#141414] transition-all duration-300 shadow-xl">
+              <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                Basic
+              </h3>
+              <div className="flex items-baseline gap-1 mb-1">
+                <span className="text-4xl font-bold text-white tracking-tighter">€{billing === 'yearly' ? '5' : '9'}</span>
+                <span className="text-sm font-normal text-zinc-500">/mo</span>
+              </div>
+              <div className="h-6 mb-6">
+                {billing === 'yearly' && <p className="text-xs text-emerald-500 font-medium bg-emerald-500/10 inline-block px-2 py-0.5 rounded border border-emerald-500/20">Billed €60 yearly</p>}
+              </div>
+              
+              <p className="text-zinc-400 text-sm mb-8 border-b border-white/5 pb-6">Perfect for building the habit of tracking.</p>
+              
+              <ul className="space-y-4 mb-8 flex-grow">
+                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-500 mr-3 flex-shrink-0" /> Decision Journal (50/mo)</li>
+                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-500 mr-3 flex-shrink-0" /> Basic Dashboard</li>
+                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-500 mr-3 flex-shrink-0" /> Limited Reports (1/week)</li>
+                <li className="flex text-zinc-500 text-sm"><CheckCircle className="w-4 h-4 text-zinc-700 mr-3 flex-shrink-0" /> No Advanced Prompts</li>
+              </ul>
+              <Button variant="secondary" className="w-full hover:bg-white hover:text-black transition-colors" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>Start Basic</Button>
+            </div>
+          </div>
+
+          {/* PRO (Highlighted) */}
+          <div className="relative group transform md:-translate-y-6 z-10 h-full">
+            <div className="absolute -inset-[1px] bg-gradient-to-b from-emerald-500 to-emerald-900/20 rounded-2xl opacity-70 group-hover:opacity-100 transition-opacity duration-500 blur-sm"></div>
+            <div className="relative p-8 flex flex-col bg-[#0a0a0a] rounded-2xl h-full shadow-2xl border border-white/10">
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.4)] whitespace-nowrap">
+                Most Popular
+              </div>
+              
+              <h3 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                Pro <span className="text-emerald-500 text-xs bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">RECOMMENDED</span>
+              </h3>
+              <div className="flex items-baseline gap-1 mb-1">
+                <span className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-emerald-200 tracking-tighter">
+                  €{billing === 'yearly' ? '9' : '19'}
+                </span>
+                <span className="text-sm font-normal text-zinc-500">/mo</span>
+              </div>
+              <div className="h-6 mb-6">
+                 {billing === 'yearly' && <p className="text-xs text-emerald-400 font-medium bg-emerald-500/10 inline-block px-2 py-0.5 rounded border border-emerald-500/20">Billed €108 yearly</p>}
+              </div>
+
+              <p className="text-zinc-300 text-sm mb-8 border-b border-white/5 pb-6">The complete system. Full access to AI & Prompts.</p>
+              
+              <ul className="space-y-4 mb-10 flex-grow">
+                <li className="flex text-white text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0 shadow-[0_0_10px_rgba(52,211,153,0.5)] rounded-full" /> <strong>Unlimited Journal</strong></li>
+                 <li className="flex text-white text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> Full Dashboard</li>
+                <li className="flex text-white text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> <strong>100 AI Reports / month</strong></li>
+                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-500/70 mr-3 flex-shrink-0" /> 12 Mega Report Types</li>
+                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-500/70 mr-3 flex-shrink-0" /> Video Education Package</li>
+                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-500/70 mr-3 flex-shrink-0" /> Full Prompt Library (50+)</li>
+              </ul>
+              
+              <Button variant="primary" className="w-full py-4 text-lg shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)] hover:shadow-[0_0_40px_-5px_rgba(16,185,129,0.5)]" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>
+                Get Clarity Now
+              </Button>
+              <p className="mt-4 text-[10px] text-zinc-500 text-center">30-day money-back guarantee.</p>
+            </div>
+          </div>
+
+          {/* FOUNDER */}
+          <div className="relative group h-full">
+            <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-transparent rounded-2xl -m-0.5 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative p-8 flex flex-col bg-[#0f0f0f] border border-white/10 rounded-2xl h-full hover:bg-[#141414] transition-all duration-300 shadow-xl">
+              <h3 className="text-xl font-bold text-white mb-2">Founder</h3>
+              <div className="flex items-baseline gap-1 mb-1">
+                <span className="text-4xl font-bold text-white tracking-tighter">€{billing === 'yearly' ? '24' : '49'}</span>
+                <span className="text-sm font-normal text-zinc-500">/mo</span>
+              </div>
+              <div className="h-6 mb-6">
+                {billing === 'yearly' && <p className="text-xs text-purple-400 font-medium bg-purple-500/10 inline-block px-2 py-0.5 rounded border border-purple-500/20">Billed €288 yearly</p>}
+              </div>
+
+              <p className="text-zinc-400 text-sm mb-8 border-b border-white/5 pb-6">For power users who need deep data mining.</p>
+              
+              <ul className="space-y-4 mb-8 flex-grow">
+                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-3 flex-shrink-0" /> <strong>Everything in Pro</strong></li>
+                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-3 flex-shrink-0" /> Advanced Analytics (16 reps)</li>
+                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-3 flex-shrink-0" /> Historical Deep Audits</li>
+                <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-purple-500 mr-3 flex-shrink-0" /> Priority Processing</li>
+                <li className="flex text-zinc-300 text-sm"><Zap className="w-4 h-4 text-purple-500 mr-3 flex-shrink-0" /> Early Feature Access</li>
+              </ul>
+              <Button variant="outline" className="w-full border-purple-500/30 text-purple-400 hover:bg-purple-500/10 hover:border-purple-500/60" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>Become a Founder</Button>
+            </div>
+          </div>
+
+        </div>
+
+        {/* LIFETIME (Unchanged style, just refined background) */}
+        <div className="max-w-4xl mx-auto">
+           <div className="relative bg-gradient-to-r from-[#1a1a1a] to-[#0f0f0f] border border-white/10 rounded-2xl p-8 md:p-12 overflow-hidden shadow-2xl group hover:border-emerald-500/30 transition-all duration-500">
+             <div className="absolute top-0 right-0 bg-emerald-900/30 text-emerald-400 text-xs font-bold px-4 py-1.5 rounded-bl uppercase tracking-widest border-b border-l border-emerald-500/20">Limited Spots</div>
+             
+             <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+               <div className="md:w-1/2 text-center md:text-left">
+                  <div className="text-xs font-bold text-emerald-400 mb-3 uppercase tracking-widest bg-emerald-900/20 px-3 py-1 inline-block rounded border border-emerald-500/20">One-Time Payment</div>
+                  <h3 className="text-3xl font-bold text-white mb-2">Founder Lifetime</h3>
+                  <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                    Skip the monthly fees forever. Get full Founder status, all future updates, and priority contact channel with a single payment.
+                  </p>
+                  <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
+                      <div className="text-5xl font-bold text-white tracking-tighter">€399</div>
+                      <div className="text-2xl text-zinc-600 line-through font-medium">€699</div>
+                  </div>
+                  <p className="text-zinc-500 text-xs">Pay once. Own it forever.</p>
+               </div>
+
+               <div className="md:w-1/2 w-full bg-black/20 p-6 rounded-xl border border-white/5">
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> <strong>Founder Status Forever</strong></li>
+                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> No Monthly Fees</li>
+                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> All Future Updates Included</li>
+                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-emerald-400 mr-3 flex-shrink-0" /> Dedicated Priority Contact</li>
+                  </ul>
+                  <Button variant="outline" className="w-full py-4 border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.1)] font-bold" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>
+                    Get Lifetime Access
+                  </Button>
+               </div>
+             </div>
+          </div>
+        </div>
+         
       </div>
-       
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const FAQ = () => (
   <section id="faq" className="relative py-20 bg-[#0a0a0a] border-t border-white/5">

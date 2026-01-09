@@ -555,7 +555,9 @@ const AgentSection = () => {
       desc: "Identifies patterns that consistently cost you money — markets, timing, or behaviors you repeat without noticing.",
       icon: Search,
       color: "text-red-500",
-      bg: "bg-red-500/10 border-red-500/20"
+      bg: "bg-red-500/10 border-red-500/20",
+      hoverBorder: "group-hover:border-red-500/50",
+      glow: "from-red-500/20"
     },
     {
       id: 'pattern',
@@ -563,7 +565,9 @@ const AgentSection = () => {
       desc: "Discover hidden correlations. Do you win more on Underdogs? Do you lose on Fridays?",
       icon: BrainCircuit,
       color: "text-blue-500",
-      bg: "bg-blue-500/10 border-blue-500/20"
+      bg: "bg-blue-500/10 border-blue-500/20",
+      hoverBorder: "group-hover:border-blue-500/50",
+      glow: "from-blue-500/20"
     },
     {
       id: 'psych',
@@ -571,7 +575,9 @@ const AgentSection = () => {
       desc: "Shows when emotion, tilt, or pressure influence your decisions more than logic. Protects your mental capital.",
       icon: ActivityIcon,
       color: "text-orange-500",
-      bg: "bg-orange-500/10 border-orange-500/20"
+      bg: "bg-orange-500/10 border-orange-500/20",
+      hoverBorder: "group-hover:border-orange-500/50",
+      glow: "from-orange-500/20"
     },
     {
       id: 'weekly',
@@ -579,7 +585,9 @@ const AgentSection = () => {
       desc: "Clear directives for next week: reduce volume, avoid specific setups, or enforce PASS discipline.",
       icon: ClipboardCheck,
       color: "text-purple-500",
-      bg: "bg-purple-500/10 border-purple-500/20"
+      bg: "bg-purple-500/10 border-purple-500/20",
+      hoverBorder: "group-hover:border-purple-500/50",
+      glow: "from-purple-500/20"
     },
     {
       id: 'market',
@@ -587,7 +595,10 @@ const AgentSection = () => {
       desc: "Analyze your ROI across different markets (1X2, Asian Handicap, Over/Under). See where your edge is real.",
       icon: BarChart3,
       color: "text-emerald-500",
-      bg: "bg-emerald-500/10 border-emerald-500/20"
+      bg: "bg-emerald-500/10 border-emerald-500/20",
+      hoverBorder: "group-hover:border-emerald-500/50",
+      glow: "from-emerald-500/20",
+      modalType: 'pattern'
     },
     {
       id: 'timing',
@@ -595,7 +606,10 @@ const AgentSection = () => {
       desc: "Compare your Opening Line vs Closing Line value (CLV) and track your in-play entry timing success.",
       icon: Clock,
       color: "text-cyan-500",
-      bg: "bg-cyan-500/10 border-cyan-500/20"
+      bg: "bg-cyan-500/10 border-cyan-500/20",
+      hoverBorder: "group-hover:border-cyan-500/50",
+      glow: "from-cyan-500/20",
+      modalType: 'leak'
     },
     {
       id: 'odds',
@@ -603,7 +617,10 @@ const AgentSection = () => {
       desc: "Find your profitability sweet spot. Are you losing value on 'safe' low odds or chasing high-risk longshots?",
       icon: Target,
       color: "text-pink-500",
-      bg: "bg-pink-500/10 border-pink-500/20"
+      bg: "bg-pink-500/10 border-pink-500/20",
+      hoverBorder: "group-hover:border-pink-500/50",
+      glow: "from-pink-500/20",
+      modalType: 'pattern'
     },
     {
       id: 'league',
@@ -611,7 +628,10 @@ const AgentSection = () => {
       desc: "See which competitions are draining your bankroll. Stop betting on leagues where you have no edge.",
       icon: Database,
       color: "text-yellow-500",
-      bg: "bg-yellow-500/10 border-yellow-500/20"
+      bg: "bg-yellow-500/10 border-yellow-500/20",
+      hoverBorder: "group-hover:border-yellow-500/50",
+      glow: "from-yellow-500/20",
+      modalType: 'weekly'
     }
   ];
 
@@ -620,7 +640,7 @@ const AgentSection = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
-        <div className="text-center max-w-4xl mx-auto mb-16">
+        <div className="text-center max-w-4xl mx-auto mb-20">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 tracking-tight">
             Your Personal Performance Reports
           </h2>
@@ -636,60 +656,81 @@ const AgentSection = () => {
           </p>
 
           {/* Process Flow */}
-          <div className="grid md:grid-cols-3 gap-6 mb-12 relative">
+          <div className="grid md:grid-cols-3 gap-6 mb-16 relative">
             <div className="hidden md:block absolute top-8 left-[16%] right-[16%] h-px bg-gradient-to-r from-zinc-800 via-emerald-900/50 to-zinc-800 -z-10"></div>
 
-            <div className="bg-[#0f0f0f] p-5 rounded-xl border border-zinc-800 relative z-10 mx-auto w-full max-w-xs shadow-lg">
-                <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-500 font-bold border border-zinc-700 shadow-[0_0_10px_rgba(16,185,129,0.1)]">1</div>
-                <h4 className="text-white font-bold mb-1 text-sm">You Log Decisions</h4>
-                <p className="text-zinc-500 text-xs">Input your bets, timing, and emotions into the smart journal.</p>
+            <div className="bg-[#0f0f0f] p-6 rounded-2xl border border-zinc-800 relative z-10 mx-auto w-full max-w-xs shadow-lg flex flex-col items-center">
+                <div className="w-10 h-10 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-emerald-500 font-bold border border-zinc-800 shadow-[0_0_15px_rgba(16,185,129,0.1)]">1</div>
+                <h4 className="text-white font-bold mb-2 text-sm">You Log Decisions</h4>
+                <p className="text-zinc-500 text-xs text-center">Input your bets, timing, and emotions into the smart journal.</p>
             </div>
 
-            <div className="bg-[#0f0f0f] p-5 rounded-xl border border-zinc-800 relative z-10 mx-auto w-full max-w-xs shadow-lg">
-                <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-500 font-bold border border-zinc-700 shadow-[0_0_10px_rgba(16,185,129,0.1)]">2</div>
-                <h4 className="text-white font-bold mb-1 text-sm">Patterns Detected</h4>
-                <p className="text-zinc-500 text-xs">The system identifies leaks you miss in the heat of the moment.</p>
+            <div className="bg-[#0f0f0f] p-6 rounded-2xl border border-zinc-800 relative z-10 mx-auto w-full max-w-xs shadow-lg flex flex-col items-center">
+                <div className="w-10 h-10 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-emerald-500 font-bold border border-zinc-800 shadow-[0_0_15px_rgba(16,185,129,0.1)]">2</div>
+                <h4 className="text-white font-bold mb-2 text-sm">Patterns Detected</h4>
+                <p className="text-zinc-500 text-xs text-center">The system identifies leaks you miss in the heat of the moment.</p>
             </div>
 
-            <div className="bg-[#0f0f0f] p-5 rounded-xl border border-zinc-800 relative z-10 mx-auto w-full max-w-xs shadow-lg">
-                <div className="w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-500 font-bold border border-zinc-700 shadow-[0_0_10px_rgba(16,185,129,0.1)]">3</div>
-                <h4 className="text-white font-bold mb-1 text-sm">Reports Show Truth</h4>
-                <p className="text-zinc-500 text-xs">Receive honest audits on where your process breaks down.</p>
+            <div className="bg-[#0f0f0f] p-6 rounded-2xl border border-zinc-800 relative z-10 mx-auto w-full max-w-xs shadow-lg flex flex-col items-center">
+                <div className="w-10 h-10 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-emerald-500 font-bold border border-zinc-800 shadow-[0_0_15px_rgba(16,185,129,0.1)]">3</div>
+                <h4 className="text-white font-bold mb-2 text-sm">Reports Show Truth</h4>
+                <p className="text-zinc-500 text-xs text-center">Receive honest audits on where your process breaks down.</p>
             </div>
           </div>
 
-          <div className="bg-zinc-900/30 rounded-2xl p-6 md:p-8 border border-white/5 mb-8 max-w-3xl mx-auto">
+          <div className="bg-gradient-to-b from-zinc-900/50 to-transparent rounded-2xl p-6 md:p-8 border border-white/5 mb-8 max-w-3xl mx-auto backdrop-blur-sm">
             <p className="text-base text-zinc-300 leading-relaxed font-light">
               Most bettors don't lose because they lack information. They lose because they lack feedback on their own behavior. 
               <strong className="text-white font-semibold block mt-2">BettingClarity acts as a mirror for your decision-making, exposing the hidden risks and emotional habits that drain your bankroll.</strong>
             </p>
           </div>
 
-          <div className="inline-flex items-center gap-2 text-emerald-400/90 text-sm font-medium bg-emerald-900/10 px-5 py-2.5 rounded-full border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+          <div className="inline-flex items-center gap-2 text-emerald-400/90 text-sm font-medium bg-emerald-900/10 px-6 py-3 rounded-full border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.15)]">
             <ShieldCheck className="w-4 h-4" />
             <span>This system doesn’t promise profits. It protects the balance you already have.</span>
           </div>
         </div>
 
-        {/* 8 Report Cards Grid (UPDATED) */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        {/* 8 Report Cards Grid (WOW EDITION) */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
           {reports.map((report) => (
-            <Card 
+            <div 
               key={report.id}
-              className="flex flex-col items-center text-center p-6 hover:bg-[#18181b] group h-full"
-              onClick={() => setActiveReport(report.id)}
+              className={`group relative bg-[#0a0a0a] rounded-2xl p-6 border border-white/5 hover:border-opacity-0 transition-all duration-500 cursor-pointer overflow-hidden h-full flex flex-col`}
+              onClick={() => setActiveReport(report.modalType || report.id)}
             >
-              <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform ${report.bg}`}>
-                <report.icon className={`w-7 h-7 ${report.color}`} />
+              {/* Dynamic Border Glow on Hover */}
+              <div className={`absolute inset-0 border-2 border-transparent ${report.hoverBorder} rounded-2xl transition-colors duration-500 pointer-events-none`}></div>
+              
+              {/* Background Gradient Spot */}
+              <div className={`absolute -right-10 -top-10 w-32 h-32 bg-gradient-to-br ${report.glow} to-transparent blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-700`}></div>
+
+              {/* Header: Icon & Arrow */}
+              <div className="flex justify-between items-start mb-6 relative z-10">
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center border border-white/10 bg-[#121212] group-hover:scale-110 transition-transform duration-500 shadow-lg`}>
+                  <report.icon className={`w-6 h-6 ${report.color} drop-shadow-md`} />
+                </div>
+                <div className="p-2 rounded-full border border-white/5 bg-white/5 text-zinc-500 group-hover:text-white group-hover:bg-white/10 transition-all duration-300">
+                   <ArrowRight className="w-4 h-4 -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2">{report.title}</h3>
-              <p className="text-zinc-500 text-xs leading-relaxed mb-6 flex-grow">
-                {report.desc}
-              </p>
-              <Button variant="outline" className="w-full text-xs py-2 h-auto border-dashed border-zinc-700 mt-auto hover:border-emerald-500/50 hover:text-emerald-400">
-                View Report
-              </Button>
-            </Card>
+
+              {/* Content */}
+              <div className="relative z-10 flex-grow">
+                <h3 className="text-xl font-bold text-white mb-3 group-hover:translate-x-1 transition-transform duration-300">{report.title}</h3>
+                <p className="text-zinc-500 text-sm leading-relaxed font-light">
+                  {report.desc}
+                </p>
+              </div>
+
+              {/* Footer / Tech Line */}
+              <div className="mt-8 pt-4 border-t border-white/5 flex items-center justify-between relative z-10 group-hover:border-white/10 transition-colors">
+                 <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-wider">Auto-Analysis</span>
+                 <span className={`text-xs font-bold ${report.color} flex items-center gap-1`}>
+                    View Report
+                 </span>
+              </div>
+            </div>
           ))}
         </div>
 

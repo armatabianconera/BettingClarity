@@ -220,7 +220,7 @@ const Hero = ({ onWatchVideo }) => {
   const scrollToSolution = () => document.getElementById('solution').scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex flex-col items-center justify-center min-h-[85vh]">
+    <section className="relative pt-48 pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex flex-col items-center justify-center min-h-[85vh]">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-[#0a0a0a] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] z-0"></div>
       <div className="blob-green top-0 left-1/2 -translate-x-1/2 opacity-20 blur-[100px] w-[800px] h-[800px] rounded-full z-0"></div>

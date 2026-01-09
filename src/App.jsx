@@ -228,7 +228,7 @@ const Hero = ({ onWatchVideo }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
         
         {/* Headline */}
-           <h1 className="text-4xl md:text-7xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1]">
+           <h1 className="text-5xl md:text-7xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1]">
         Stop Guessing. <br className="hidden md:block" />
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-200 to-white">
           Start Deciding.

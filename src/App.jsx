@@ -251,7 +251,7 @@ const Hero = ({ onWatchVideo }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
         
         {/* Headline */}
-           <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1]">
+           <h1 className="text-6xl md:text-7xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1]">
         Stop Guessing. <br className="hidden md:block" />
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-200 to-white">
           Start Deciding.
@@ -1331,29 +1331,52 @@ const Pricing = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading title="Choose Your Clarity Level." subtitle="Professional tools. Flexible plans. Cancel anytime." />
         
-        {/* Toggle Switch */}
+        {/* Toggle Switch - "PRESSED" / INSET STYLE */}
         <div className="flex justify-center mb-16">
-          <div className="bg-[#121212] p-1.5 rounded-full border border-white/10 flex items-center relative shadow-2xl backdrop-blur-sm">
-            <button
-              onClick={() => setBilling('monthly')}
-              className={`px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 ${
-                billing === 'monthly'
-                  ? 'bg-zinc-800 text-white shadow-lg border border-white/5'
-                  : 'text-zinc-500 hover:text-zinc-300'
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setBilling('yearly')}
-              className={`px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${
-                billing === 'yearly'
-                  ? 'bg-emerald-600 text-white shadow-lg border border-emerald-500/20 shadow-emerald-900/20'
-                  : 'text-zinc-500 hover:text-zinc-300'
-              }`}
-            >
-              Yearly <span className="bg-emerald-400/20 text-emerald-300 text-[10px] px-2 py-0.5 rounded-full border border-emerald-400/20 animate-pulse">SAVE 50%</span>
-            </button>
+          <div className="relative">
+            {/* Outer Glow */}
+            <div className="absolute -inset-1 bg-gradient-to-b from-white/5 to-transparent rounded-full blur-sm opacity-50"></div>
+            
+            {/* Main Track Container */}
+            <div className="relative bg-[#050505] p-2 rounded-full border border-white/10 flex items-center shadow-2xl">
+              
+              {/* Monthly Button */}
+              <button
+                onClick={() => setBilling('monthly')}
+                className={`px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 relative overflow-hidden ${
+                  billing === 'monthly'
+                    ? 'bg-zinc-900/80 text-white shadow-[inset_0_2px_6px_rgba(0,0,0,0.8)] border border-white/5' // Wciśnięty
+                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/5 border border-transparent'
+                }`}
+              >
+                Monthly
+              </button>
+
+              {/* Yearly Button */}
+              <button
+                onClick={() => setBilling('yearly')}
+                className={`ml-2 px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 relative overflow-hidden ${
+                  billing === 'yearly'
+                    ? 'bg-emerald-950/30 text-emerald-400 shadow-[inset_0_2px_8px_rgba(0,0,0,0.6)] border border-emerald-500/20' // Wciśnięty Premium
+                    : 'text-zinc-500 hover:text-white hover:bg-white/5 border border-transparent'
+                }`}
+              >
+                Yearly 
+                {/* Save Badge */}
+                <span className={`text-[10px] px-2 py-0.5 rounded-full border transition-colors ${
+                    billing === 'yearly' 
+                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.2)]'
+                    : 'bg-zinc-800 border-zinc-700 text-zinc-400'
+                }`}>
+                  SAVE 50%
+                </span>
+                
+                {/* Active Indicator Dot (Optional Detail) */}
+                {billing === 'yearly' && (
+                    <span className="absolute top-1/2 right-3 -translate-y-1/2 w-1 h-1 bg-emerald-400 rounded-full shadow-[0_0_5px_rgba(16,185,129,1)]"></span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
         
@@ -1474,7 +1497,7 @@ const Pricing = () => {
 
         </div>
 
-        {/* LIFETIME - FANCY EDITION (Preserved) */}
+        {/* LIFETIME - FANCY EDITION (Updated) */}
         <div className="max-w-4xl mx-auto relative group">
            {/* Gold Glow Effect behind the card */}
            <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/20 to-yellow-600/20 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-700"></div>
@@ -1487,8 +1510,8 @@ const Pricing = () => {
              </div>
 
              {/* Badge */}
-             <div className="absolute top-0 right-0 bg-gradient-to-bl from-amber-500 to-yellow-600 text-black text-xs font-extrabold px-6 py-2 rounded-bl-2xl uppercase tracking-widest shadow-lg shadow-amber-900/20 z-10">
-               VIP Access
+             <div className="absolute top-0 right-0 bg-gradient-to-bl from-amber-500 to-yellow-600 text-black text-xs font-extrabold px-6 py-2 rounded-bl-2xl uppercase tracking-widest shadow-lg shadow-amber-900/20 z-10 flex items-center gap-2">
+               <Sparkles className="w-3 h-3 fill-black" /> Elite Early Access
              </div>
              
              <div className="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
@@ -1502,6 +1525,18 @@ const Pricing = () => {
                   <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                     Skip the monthly fees forever. Get full Founder status, all future updates, and priority contact channel with a single payment.
                   </p>
+                  
+                  {/* Scarcity Element */}
+                  <div className="mb-6 bg-amber-900/10 border border-amber-500/10 rounded-lg p-3 inline-block w-full max-w-xs">
+                    <div className="flex justify-between items-center mb-2">
+                        <span className="text-[10px] font-bold text-amber-500 uppercase tracking-wider">Batch #1 Status</span>
+                        <span className="text-[10px] font-mono text-amber-200">6/10 Spots Left</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden border border-white/5">
+                        <div className="h-full bg-gradient-to-r from-amber-600 to-yellow-400 w-[60%] shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
+                    </div>
+                  </div>
+
                   <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
                       <div className="text-5xl font-bold text-white tracking-tighter drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]">€399</div>
                       <div className="text-2xl text-zinc-600 line-through font-medium">€699</div>
@@ -1509,14 +1544,15 @@ const Pricing = () => {
                   <p className="text-amber-500/80 text-xs font-medium">Pay once. Own it forever.</p>
                </div>
 
-               <div className="md:w-1/2 w-full bg-black/40 p-6 rounded-xl border border-amber-500/10 backdrop-blur-sm">
-                  <ul className="space-y-3 mb-8">
-                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-amber-400 mr-3 flex-shrink-0" /> <strong>Founder Status Forever</strong></li>
-                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-amber-400 mr-3 flex-shrink-0" /> No Monthly Fees</li>
-                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-amber-400 mr-3 flex-shrink-0" /> All Future Updates Included</li>
-                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-4 h-4 text-amber-400 mr-3 flex-shrink-0" /> Dedicated Priority Contact</li>
+               <div className="md:w-1/2 w-full">
+                  <ul className="space-y-4 mb-8">
+                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-5 h-5 text-amber-400 mr-3 flex-shrink-0" /> <span><strong>Founder Status Forever</strong></span></li>
+                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-5 h-5 text-amber-400 mr-3 flex-shrink-0" /> <span>No Monthly Fees</span></li>
+                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-5 h-5 text-amber-400 mr-3 flex-shrink-0" /> <span>All Future Updates Included</span></li>
+                    <li className="flex text-zinc-200 text-sm"><CheckCircle className="w-5 h-5 text-amber-400 mr-3 flex-shrink-0" /> <span>Dedicated Priority Contact</span></li>
+                    <li className="flex text-zinc-200 text-sm"><Zap className="w-5 h-5 text-amber-400 mr-3 flex-shrink-0" /> <span><strong>Early Access to Beta Features</strong></span></li>
                   </ul>
-                  <Button className="w-full py-4 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-black border-none shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] font-bold" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>
+                  <Button className="w-full py-4 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-black border-none shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] font-bold text-lg" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>
                     Get Lifetime Access
                   </Button>
                   <p className="mt-4 text-[10px] text-zinc-500 flex items-center justify-center">

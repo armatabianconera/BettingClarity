@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   CheckCircle, 
   XCircle, 
@@ -49,6 +49,68 @@ import {
   Play,
   ArrowDown
 } from 'lucide-react';
+
+// --- ANIMATION COMPONENTS ---
+
+// 1. Scroll Reveal Component
+const Reveal = ({ children, delay = 0, className = "" }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: "50px" }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
+        isVisible 
+          ? 'opacity-100 translate-y-0 filter-none' 
+          : 'opacity-0 translate-y-12 blur-sm'
+      } ${className}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  );
+};
+
+// 2. Border Beam Animation Component
+const BorderBeam = ({ colorClass = "from-emerald-500 via-emerald-200 to-transparent" }) => (
+  <div className="absolute inset-0 rounded-[inherit] pointer-events-none overflow-hidden [mask-image:linear-gradient(white,white)] z-0">
+    <div className={`absolute aspect-square w-[200%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-tr ${colorClass} opacity-40 animate-spin-slow`} />
+  </div>
+);
+
+// 3. Background Structure Component
+const BackgroundStructure = () => (
+  <div className="fixed inset-0 pointer-events-none z-0">
+    {/* Faint Grid */}
+    <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+    
+    {/* Vertical Container Lines */}
+    <div className="max-w-7xl mx-auto h-full border-x border-white/[0.03] flex justify-between relative">
+      <div className="absolute top-0 bottom-0 left-1/4 w-px bg-white/[0.02] hidden md:block"></div>
+      <div className="absolute top-0 bottom-0 left-1/2 w-px bg-white/[0.02]"></div>
+      <div className="absolute top-0 bottom-0 left-3/4 w-px bg-white/[0.02] hidden md:block"></div>
+    </div>
+  </div>
+);
 
 // --- NEW: Smart Logo Component (Auto-fallback) ---
 const Logo = () => {
@@ -150,17 +212,26 @@ const GlobalStyles = () => (
       animation: fadeIn 0.4s ease-out forwards;
     }
 
+    .animate-spin-slow {
+      animation: spin 8s linear infinite;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
     }
   `}</style>
 );
 
 // --- Basic Components ---
 
-const Button = ({ children, variant = 'primary', className = '', ...props }) => {
-  const baseStyle = "relative inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] tracking-wide";
+const Button = ({ children, variant = 'primary', className = '', beam = false, ...props }) => {
+  const baseStyle = "relative inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] tracking-wide overflow-hidden";
   
   const variants = {
     primary: "bg-emerald-500 hover:bg-emerald-400 text-black shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] border border-emerald-400/20",
@@ -171,18 +242,21 @@ const Button = ({ children, variant = 'primary', className = '', ...props }) => 
 
   return (
     <button className={`${baseStyle} ${variants[variant]} ${className}`} {...props}>
-      {children}
+      {beam && variant === 'primary' && <BorderBeam colorClass="from-white via-white to-transparent" />}
+      <span className="relative z-10 flex items-center">{children}</span>
     </button>
   );
 };
 
 const SectionHeading = ({ title, subtitle, centered = true }) => (
-  <div className={`relative z-10 mb-16 ${centered ? 'text-center' : 'text-left'}`}>
-    <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight leading-tight">
-      {title}
-    </h2>
-    {subtitle && <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">{subtitle}</p>}
-  </div>
+  <Reveal>
+    <div className={`relative z-10 mb-16 ${centered ? 'text-center' : 'text-left'}`}>
+      <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight leading-tight">
+        {title}
+      </h2>
+      {subtitle && <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">{subtitle}</p>}
+    </div>
+  </Reveal>
 );
 
 const Card = ({ children, className = '', glow = false, allowOverflow = false, onClick }) => (
@@ -245,72 +319,83 @@ const Hero = ({ onWatchVideo }) => {
   return (
     <section className="relative pt-48 pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex flex-col items-center justify-center min-h-[85vh]">
       {/* Background Effects */}
-      <div className="absolute inset-0 bg-[#0a0a0a] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] z-0"></div>
+      <div className="absolute inset-0 bg-[#0a0a0a] z-0"></div>
       <div className="blob-green top-0 left-1/2 -translate-x-1/2 opacity-20 blur-[100px] w-[800px] h-[800px] rounded-full z-0"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
         
-        {/* Headline */}
-           <h1 className="text-5xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1]">
-        Stop Guessing. <br className="hidden md:block" />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-200 to-white">
-          Start Deciding.
-        </span>
-      </h1>
+        {/* Headline with Mist Effect */}
+        <Reveal>
+          <div className="relative">
+             {/* Delicate Mist/Glow behind text */}
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none -z-10 mix-blend-screen"></div>
+             
+             <h1 className="text-5xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1] relative z-10">
+              Stop Guessing. <br className="hidden md:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-200 to-white">
+                Start Deciding.
+              </span>
+            </h1>
+          </div>
+        </Reveal>
         
         {/* Buttons (Preserved) */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-          <Button onClick={scrollToPricing} className="h-14 px-8 text-lg shadow-[0_0_50px_-10px_rgba(16,185,129,0.5)]">
-            Get Started Now
-            <ArrowRight size={20} className="ml-2" />
-          </Button>
-          <Button variant="secondary" className="h-14 px-8 text-lg bg-[#0a0a0a] hover:bg-[#1a1a1a]" onClick={scrollToSolution}>
-            <ArrowDown size={20} className="mr-2" />
-            Learn More
-          </Button>
-        </div>
+        <Reveal delay={200}>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+            <Button onClick={scrollToPricing} beam={true} className="h-14 px-8 text-lg shadow-[0_0_50px_-10px_rgba(16,185,129,0.5)]">
+              Get Started Now
+              <ArrowRight size={20} className="ml-2" />
+            </Button>
+            <Button variant="secondary" className="h-14 px-8 text-lg bg-[#0a0a0a] hover:bg-[#1a1a1a]" onClick={scrollToSolution}>
+              <ArrowDown size={20} className="mr-2" />
+              Learn More
+            </Button>
+          </div>
+        </Reveal>
 
         {/* 3 Bullet Points (Preserved) */}
-        <div className="mt-20 grid md:grid-cols-3 gap-6 text-left relative z-10">
-        <div className="bg-zinc-900/90 border border-white/10 p-6 rounded-xl backdrop-blur-sm hover:border-emerald-500/30 transition-colors shadow-lg shadow-black/50">
-          <div className="flex items-center gap-1 text-emerald-400 mb-4">
-            {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-emerald-400" />)}
+        <Reveal delay={400}>
+          <div className="mt-20 grid md:grid-cols-3 gap-6 text-left relative z-10">
+          <div className="bg-zinc-900/90 border border-white/10 p-6 rounded-xl backdrop-blur-sm hover:border-emerald-500/30 transition-colors shadow-lg shadow-black/50">
+            <div className="flex items-center gap-1 text-emerald-400 mb-4">
+              {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-emerald-400" />)}
+            </div>
+            <p className="text-zinc-200 text-sm mb-4 leading-relaxed">
+              “The biggest improvement wasn’t better bets- it was better no-bets. BettingClarity helped me understand when not acting is the correct decision.”
+            </p>
+            <div className="flex items-center gap-3 mt-auto pt-2 border-t border-white/5">
+              <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">M</div>
+              <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Marko, Finland</div>
+            </div>
           </div>
-          <p className="text-zinc-200 text-sm mb-4 leading-relaxed">
-            “The biggest improvement wasn’t better bets- it was better no-bets. BettingClarity helped me understand when not acting is the correct decision.”
-          </p>
-          <div className="flex items-center gap-3 mt-auto pt-2 border-t border-white/5">
-            <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">M</div>
-            <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Marko, Finland</div>
-          </div>
-        </div>
 
-        <div className="bg-zinc-900/90 border border-white/10 p-6 rounded-xl backdrop-blur-sm hover:border-emerald-500/30 transition-colors shadow-lg shadow-black/50">
-          <div className="flex items-center gap-1 text-emerald-400 mb-4">
-            {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-emerald-400" />)}
+          <div className="bg-zinc-900/90 border border-white/10 p-6 rounded-xl backdrop-blur-sm hover:border-emerald-500/30 transition-colors shadow-lg shadow-black/50">
+            <div className="flex items-center gap-1 text-emerald-400 mb-4">
+              {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-emerald-400" />)}
+            </div>
+            <p className="text-zinc-200 text-sm mb-4 leading-relaxed">
+              “BettingClarity was the first tool that made me realize I wasn’t losing on odds. I was losing on timing and emotions. The Decision Journal alone changed how often I say PASS.”
+            </p>
+            <div className="flex items-center gap-3 mt-auto pt-2 border-t border-white/5">
+              <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">J</div>
+              <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Jonas, Norway</div>
+            </div>
           </div>
-          <p className="text-zinc-200 text-sm mb-4 leading-relaxed">
-            “BettingClarity was the first tool that made me realize I wasn’t losing on odds. I was losing on timing and emotions. The Decision Journal alone changed how often I say PASS.”
-          </p>
-          <div className="flex items-center gap-3 mt-auto pt-2 border-t border-white/5">
-            <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">J</div>
-            <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Jonas, Norway</div>
-          </div>
-        </div>
 
-        <div className="bg-zinc-900/90 border border-white/10 p-6 rounded-xl backdrop-blur-sm hover:border-emerald-500/30 transition-colors shadow-lg shadow-black/50">
-          <div className="flex items-center gap-1 text-emerald-400 mb-4">
-            {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-emerald-400" />)}
-          </div>
-          <p className="text-zinc-200 text-sm mb-4 leading-relaxed">
-            “Just access to the prompt library and the courses completely changed how I watch and think about matches. I enjoy betting more now, because I understand my decisions instead of chasing outcomes.”
-          </p>
-          <div className="flex items-center gap-3 mt-auto pt-2 border-t border-white/5">
-            <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">L</div>
-            <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Leon, Malta</div>
+          <div className="bg-zinc-900/90 border border-white/10 p-6 rounded-xl backdrop-blur-sm hover:border-emerald-500/30 transition-colors shadow-lg shadow-black/50">
+            <div className="flex items-center gap-1 text-emerald-400 mb-4">
+              {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-emerald-400" />)}
+            </div>
+            <p className="text-zinc-200 text-sm mb-4 leading-relaxed">
+              “Just access to the prompt library and the courses completely changed how I watch and think about matches. I enjoy betting more now, because I understand my decisions instead of chasing outcomes.”
+            </p>
+            <div className="flex items-center gap-3 mt-auto pt-2 border-t border-white/5">
+              <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">L</div>
+              <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Leon, Malta</div>
+            </div>
           </div>
         </div>
-      </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -319,20 +404,22 @@ const Hero = ({ onWatchVideo }) => {
 const Problem = () => (
   // Increased pb-32 to pb-48 for more spacing below text
   <section className="relative pt-32 pb-48 bg-[#0a0a0a]">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
       {/* Centered Headline - Bigger & Bolder */}
-      <div className="relative z-10 mb-0 max-w-5xl mx-auto">
-        <h2 className="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tighter leading-tight">
-          It’s not bad luck. <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-200 to-white">
-            It’s unmanaged decisions.
-          </span>
-        </h2>
-        <p className="text-sm md:text-base text-white/60 max-w-2xl mx-auto leading-relaxed font-normal">
-          Most bettors don’t lose due to lack of information. <br className="hidden md:block" />
-          They lose because they lack a system under pressure.
-        </p>
-      </div>
+      <Reveal>
+        <div className="mb-0 max-w-5xl mx-auto">
+          <h2 className="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tighter leading-tight">
+            It’s not bad luck. <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-200 to-white">
+              It’s unmanaged decisions.
+            </span>
+          </h2>
+          <p className="text-sm md:text-base text-white/60 max-w-2xl mx-auto leading-relaxed font-normal">
+            Most bettors don’t lose due to lack of information. <br className="hidden md:block" />
+            They lose because they lack a system under pressure.
+          </p>
+        </div>
+      </Reveal>
     </div>
     {/* Separator positioned at the bottom of the section */}
     <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
@@ -343,128 +430,134 @@ const Solution = () => (
   <section id="solution" className="relative pt-4 pb-24 overflow-hidden">
     <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-emerald-500/10 blur-[100px] -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"></div>
 
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
       
       {/* Dashboard Screenshot - UPDATED */}
-      <div className="mb-24 relative mx-auto max-w-5xl group">
-          <div className="absolute -inset-1 bg-gradient-to-t from-emerald-500/20 via-emerald-500/5 to-transparent rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
-          <div className="relative rounded-2xl border border-white/10 bg-[#050505] overflow-hidden shadow-2xl">
-              {/* Mock Browser Header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-[#0a0a0a]">
-                  <div className="flex gap-1.5">
-                      <div className="w-3 h-3 rounded-full bg-zinc-700/50"></div>
-                      <div className="w-3 h-3 rounded-full bg-zinc-700/50"></div>
-                      <div className="w-3 h-3 rounded-full bg-zinc-700/50"></div>
-                  </div>
-                  <div className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">Dashboard Preview</div>
-                  <div className="w-10"></div> {/* Spacer for centering */}
-              </div>
-              
-              {/* Image Container */}
-              <div className="relative aspect-[16/9] w-full bg-[#0a0a0a] flex items-center justify-center">
-                  <img 
-                      src="solution-dashboard-overview-1200x675.webp" 
-                      alt="Dashboard Interface" 
-                      className="w-full h-full object-cover opacity-80"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-transparent to-transparent opacity-60"></div>
-              </div>
-          </div>
-      </div>
+      <Reveal>
+        <div className="mb-24 relative mx-auto max-w-5xl group">
+            <div className="absolute -inset-1 bg-gradient-to-t from-emerald-500/20 via-emerald-500/5 to-transparent rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
+            <div className="relative rounded-2xl border border-white/10 bg-[#050505] overflow-hidden shadow-2xl">
+                {/* Mock Browser Header */}
+                <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-[#0a0a0a]">
+                    <div className="flex gap-1.5">
+                        <div className="w-3 h-3 rounded-full bg-zinc-700/50"></div>
+                        <div className="w-3 h-3 rounded-full bg-zinc-700/50"></div>
+                        <div className="w-3 h-3 rounded-full bg-zinc-700/50"></div>
+                    </div>
+                    <div className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">Dashboard Preview</div>
+                    <div className="w-10"></div> {/* Spacer for centering */}
+                </div>
+                
+                {/* Image Container */}
+                <div className="relative aspect-[16/9] w-full bg-[#0a0a0a] flex items-center justify-center">
+                    <img 
+                        src="solution-dashboard-overview-1200x675.webp" 
+                        alt="Dashboard Interface" 
+                        className="w-full h-full object-cover opacity-80"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-transparent to-transparent opacity-60"></div>
+                </div>
+            </div>
+        </div>
+      </Reveal>
 
       <div className="lg:grid lg:grid-cols-2 lg:gap-20 items-center">
-        <div className="mb-12 lg:mb-0">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-tight">
-            Your insurance against<br />
-            <span className="text-emerald-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]">bad decisions.</span>
-          </h2>
-          <p className="text-xl text-zinc-300 mb-8 font-light">
-            <strong>BettingClarity</strong> isn’t a magic crystal ball. It’s a decision control system built on your own betting history.
-          </p>
-          <p className="text-lg text-zinc-400 mb-6 leading-relaxed">
-            Once you start logging your bets and decisions, BettingClarity analyzes your real behavior - not theory. Based on your matches, timing, emotions, and decision quality, the system generates brutally honest performance reports that show:
-          </p>
-          <ul className="list-disc pl-5 text-zinc-400 mb-8 space-y-1">
-             <li>where you consistently lose clarity</li>
-             <li>which patterns cost you money</li>
-             <li>when you should slow down or PASS</li>
-          </ul>
-           <p className="text-lg text-zinc-300 mb-8 leading-relaxed italic">
-            This isn’t hindsight. It’s pattern recognition applied to your own data.
-          </p>
-          
-          <ul className="space-y-5">
-            {[
-              "Stop losing money on impulse and emotional bets",
-              "See exactly where your process breaks down",
-              "Get clear recommendations based on your history",
-              "Build a repeatable PLAY vs PASS framework"
-            ].map((item, index) => (
-              <li key={index} className="flex items-center text-zinc-200">
-                <div className="mr-4 flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-500">
-                   <CheckCircle className="w-4 h-4" />
-                </div>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-        
-        <div className="relative">
-          <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-zinc-800 rounded-2xl blur opacity-30"></div>
-          
-          <div className="relative bg-[#121212] border border-white/10 rounded-2xl p-8 shadow-2xl">
-            <div className="space-y-8">
-              <div className="group flex items-start">
-                <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-black font-bold text-sm shadow-[0_0_15px_rgba(16,185,129,0.4)] flex-shrink-0">1</div>
-                <div className="ml-4">
-                    <div className="text-zinc-300 font-semibold mb-1">Input Data</div>
-                    <p className="text-zinc-500 text-sm">You log your bets, decisions, emotions, and timing in the Decision Journal.</p>
-                </div>
-              </div>
-              <div className="group flex items-start">
-                <div className="w-10 h-10 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">2</div>
-                <div className="ml-4">
-                    <div className="text-zinc-300 font-semibold mb-1">Performance Analysis</div>
-                    <p className="text-zinc-500 text-sm">Your history is analyzed by multiple audits: Leak Detector, Pattern Finder, Psych Audit, Weekly Tactical Review.</p>
-                </div>
-              </div>
-              <div className="group flex items-start">
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black font-bold text-sm shadow-[0_0_15px_rgba(255,255,255,0.2)] flex-shrink-0">3</div>
-                  <div className="ml-4">
-                    <div className="text-white font-bold tracking-wide mb-1">Clear Direction</div>
-                    <p className="text-zinc-500 text-sm">You receive concrete, actionable directives - what to reduce, what to avoid, and what to fix next.</p>
-                </div>
-              </div>
-            </div>
+        <Reveal className="mb-12 lg:mb-0">
+          <div>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-tight">
+              Your insurance against<br />
+              <span className="text-emerald-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]">bad decisions.</span>
+            </h2>
+            <p className="text-xl text-zinc-300 mb-8 font-light">
+              <strong>BettingClarity</strong> isn’t a magic crystal ball. It’s a decision control system built on your own betting history.
+            </p>
+            <p className="text-lg text-zinc-400 mb-6 leading-relaxed">
+              Once you start logging your bets and decisions, BettingClarity analyzes your real behavior - not theory. Based on your matches, timing, emotions, and decision quality, the system generates brutally honest performance reports that show:
+            </p>
+            <ul className="list-disc pl-5 text-zinc-400 mb-8 space-y-1">
+               <li>where you consistently lose clarity</li>
+               <li>which patterns cost you money</li>
+               <li>when you should slow down or PASS</li>
+            </ul>
+             <p className="text-lg text-zinc-300 mb-8 leading-relaxed italic">
+              This isn’t hindsight. It’s pattern recognition applied to your own data.
+            </p>
             
-            {/* Match Entry Screenshot - UPDATED */}
-            <div className="mt-10 relative group">
-                <div className="absolute -inset-1 bg-gradient-to-t from-emerald-500/10 via-emerald-500/5 to-transparent rounded-xl blur-md opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
-                <div className="relative rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden shadow-lg">
-                    {/* Mock Browser Header - Minimal */}
-                    <div className="flex items-center justify-between px-4 py-2 border-b border-white/5 bg-[#0f0f0f]">
-                        <div className="flex gap-1">
-                            <div className="w-2 h-2 rounded-full bg-zinc-700/50"></div>
-                            <div className="w-2 h-2 rounded-full bg-zinc-700/50"></div>
-                        </div>
-                        <div className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">Match Entry UI</div>
-                    </div>
-                    
-                    {/* Image Container */}
-                    <div className="relative aspect-[4/3] w-full bg-[#0a0a0a] flex items-center justify-center">
-                        <img 
-                            src="solution-match-entry-ui-600x450.webp" 
-                            alt="Match Entry Interface" 
-                            className="w-full h-full object-cover opacity-80"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-40"></div>
-                    </div>
-                </div>
-            </div>
-
+            <ul className="space-y-5">
+              {[
+                "Stop losing money on impulse and emotional bets",
+                "See exactly where your process breaks down",
+                "Get clear recommendations based on your history",
+                "Build a repeatable PLAY vs PASS framework"
+              ].map((item, index) => (
+                <li key={index} className="flex items-center text-zinc-200">
+                  <div className="mr-4 flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-500">
+                     <CheckCircle className="w-4 h-4" />
+                  </div>
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
+        </Reveal>
+        
+        <Reveal delay={200} className="relative">
+          <div>
+            <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-zinc-800 rounded-2xl blur opacity-30"></div>
+            
+            <div className="relative bg-[#121212] border border-white/10 rounded-2xl p-8 shadow-2xl">
+              <div className="space-y-8">
+                <div className="group flex items-start">
+                  <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-black font-bold text-sm shadow-[0_0_15px_rgba(16,185,129,0.4)] flex-shrink-0">1</div>
+                  <div className="ml-4">
+                      <div className="text-zinc-300 font-semibold mb-1">Input Data</div>
+                      <p className="text-zinc-500 text-sm">You log your bets, decisions, emotions, and timing in the Decision Journal.</p>
+                  </div>
+                </div>
+                <div className="group flex items-start">
+                  <div className="w-10 h-10 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">2</div>
+                  <div className="ml-4">
+                      <div className="text-zinc-300 font-semibold mb-1">Performance Analysis</div>
+                      <p className="text-zinc-500 text-sm">Your history is analyzed by multiple audits: Leak Detector, Pattern Finder, Psych Audit, Weekly Tactical Review.</p>
+                  </div>
+                </div>
+                <div className="group flex items-start">
+                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-black font-bold text-sm shadow-[0_0_15px_rgba(255,255,255,0.2)] flex-shrink-0">3</div>
+                    <div className="ml-4">
+                      <div className="text-white font-bold tracking-wide mb-1">Clear Direction</div>
+                      <p className="text-zinc-500 text-sm">You receive concrete, actionable directives - what to reduce, what to avoid, and what to fix next.</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Match Entry Screenshot - UPDATED */}
+              <div className="mt-10 relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-t from-emerald-500/10 via-emerald-500/5 to-transparent rounded-xl blur-md opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
+                  <div className="relative rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden shadow-lg">
+                      {/* Mock Browser Header - Minimal */}
+                      <div className="flex items-center justify-between px-4 py-2 border-b border-white/5 bg-[#0f0f0f]">
+                          <div className="flex gap-1">
+                              <div className="w-2 h-2 rounded-full bg-zinc-700/50"></div>
+                              <div className="w-2 h-2 rounded-full bg-zinc-700/50"></div>
+                          </div>
+                          <div className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">Match Entry UI</div>
+                      </div>
+                      
+                      {/* Image Container */}
+                      <div className="relative aspect-[4/3] w-full bg-[#0a0a0a] flex items-center justify-center">
+                          <img 
+                              src="solution-match-entry-ui-600x450.webp" 
+                              alt="Match Entry Interface" 
+                              className="w-full h-full object-cover opacity-80"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-40"></div>
+                      </div>
+                  </div>
+              </div>
+
+            </div>
+          </div>
+        </Reveal>
       </div>
     </div>
   </section>
@@ -660,137 +753,145 @@ const AgentSection = () => {
 
   return (
     <section className="relative py-24 bg-[#0a0a0a] border-y border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header Section */}
-        <div className="text-center max-w-4xl mx-auto mb-20">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 tracking-tight">
-            Your Personal Performance Reports
-          </h2>
+        <Reveal>
+          <div className="text-center max-w-4xl mx-auto mb-20">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 tracking-tight">
+              Your Personal Performance Reports
+            </h2>
 
-          <h3 className="text-xl md:text-3xl font-bold text-white mb-6 leading-tight">
-            We don’t tell you what to bet. <br className="hidden md:block"/>
-            <span className="text-emerald-400">We show you how you actually bet- and what it costs you.</span>
-          </h3>
+            <h3 className="text-xl md:text-3xl font-bold text-white mb-6 leading-tight">
+              We don’t tell you what to bet. <br className="hidden md:block"/>
+              <span className="text-emerald-400">We show you how you actually bet- and what it costs you.</span>
+            </h3>
 
-          <p className="text-lg text-zinc-400 leading-relaxed mb-12 max-w-2xl mx-auto">
-            Built entirely on your own bets, decisions, and behavior. <br className="hidden md:block"/>
-            No tips. No predictions. Just clarity from your real data.
-          </p>
-
-          {/* Process Flow */}
-          <div className="grid md:grid-cols-3 gap-6 mb-16 relative">
-            <div className="hidden md:block absolute top-8 left-[16%] right-[16%] h-px bg-gradient-to-r from-zinc-800 via-emerald-900/50 to-zinc-800 -z-10"></div>
-
-            <div className="bg-[#0f0f0f] p-6 rounded-2xl border border-zinc-800 relative z-10 mx-auto w-full max-w-xs shadow-lg flex flex-col items-center">
-                <div className="w-10 h-10 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-emerald-500 font-bold border border-zinc-800 shadow-[0_0_15px_rgba(16,185,129,0.1)]">1</div>
-                <h4 className="text-white font-bold mb-2 text-sm">You Log Decisions</h4>
-                <p className="text-zinc-500 text-xs text-center">Input your bets, timing, and emotions into the smart journal.</p>
-            </div>
-
-            <div className="bg-[#0f0f0f] p-6 rounded-2xl border border-zinc-800 relative z-10 mx-auto w-full max-w-xs shadow-lg flex flex-col items-center">
-                <div className="w-10 h-10 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-emerald-500 font-bold border border-zinc-800 shadow-[0_0_15px_rgba(16,185,129,0.1)]">2</div>
-                <h4 className="text-white font-bold mb-2 text-sm">Patterns Detected</h4>
-                <p className="text-zinc-500 text-xs text-center">The system identifies leaks you miss in the heat of the moment.</p>
-            </div>
-
-            <div className="bg-[#0f0f0f] p-6 rounded-2xl border border-zinc-800 relative z-10 mx-auto w-full max-w-xs shadow-lg flex flex-col items-center">
-                <div className="w-10 h-10 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-emerald-500 font-bold border border-zinc-800 shadow-[0_0_15px_rgba(16,185,129,0.1)]">3</div>
-                <h4 className="text-white font-bold mb-2 text-sm">Reports Show Truth</h4>
-                <p className="text-zinc-500 text-xs text-center">Receive honest audits on where your process breaks down.</p>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-b from-zinc-900/50 to-transparent rounded-2xl p-6 md:p-8 border border-white/5 mb-8 max-w-3xl mx-auto backdrop-blur-sm">
-            <p className="text-base text-zinc-300 leading-relaxed font-light">
-              Most bettors don't lose because they lack information. They lose because they lack feedback on their own behavior. 
-              <strong className="text-white font-semibold block mt-2">BettingClarity acts as a mirror for your decision-making, exposing the hidden risks and emotional habits that drain your bankroll.</strong>
+            <p className="text-lg text-zinc-400 leading-relaxed mb-12 max-w-2xl mx-auto">
+              Built entirely on your own bets, decisions, and behavior. <br className="hidden md:block"/>
+              No tips. No predictions. Just clarity from your real data.
             </p>
-          </div>
 
-          <div className="inline-flex items-center gap-2 text-emerald-400/90 text-sm font-medium bg-emerald-900/10 px-6 py-3 rounded-full border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.15)]">
-            <ShieldCheck className="w-4 h-4" />
-            <span>This system doesn’t promise profits. It protects the balance you already have.</span>
+            {/* Process Flow */}
+            <div className="grid md:grid-cols-3 gap-6 mb-16 relative">
+              <div className="hidden md:block absolute top-8 left-[16%] right-[16%] h-px bg-gradient-to-r from-zinc-800 via-emerald-900/50 to-zinc-800 -z-10"></div>
+
+              <div className="bg-[#0f0f0f] p-6 rounded-2xl border border-zinc-800 relative z-10 mx-auto w-full max-w-xs shadow-lg flex flex-col items-center">
+                  <div className="w-10 h-10 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-emerald-500 font-bold border border-zinc-800 shadow-[0_0_15px_rgba(16,185,129,0.1)]">1</div>
+                  <h4 className="text-white font-bold mb-2 text-sm">You Log Decisions</h4>
+                  <p className="text-zinc-500 text-xs text-center">Input your bets, timing, and emotions into the smart journal.</p>
+              </div>
+
+              <div className="bg-[#0f0f0f] p-6 rounded-2xl border border-zinc-800 relative z-10 mx-auto w-full max-w-xs shadow-lg flex flex-col items-center">
+                  <div className="w-10 h-10 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-emerald-500 font-bold border border-zinc-800 shadow-[0_0_15px_rgba(16,185,129,0.1)]">2</div>
+                  <h4 className="text-white font-bold mb-2 text-sm">Patterns Detected</h4>
+                  <p className="text-zinc-500 text-xs text-center">The system identifies leaks you miss in the heat of the moment.</p>
+              </div>
+
+              <div className="bg-[#0f0f0f] p-6 rounded-2xl border border-zinc-800 relative z-10 mx-auto w-full max-w-xs shadow-lg flex flex-col items-center">
+                  <div className="w-10 h-10 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-emerald-500 font-bold border border-zinc-800 shadow-[0_0_15px_rgba(16,185,129,0.1)]">3</div>
+                  <h4 className="text-white font-bold mb-2 text-sm">Reports Show Truth</h4>
+                  <p className="text-zinc-500 text-xs text-center">Receive honest audits on where your process breaks down.</p>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-b from-zinc-900/50 to-transparent rounded-2xl p-6 md:p-8 border border-white/5 mb-8 max-w-3xl mx-auto backdrop-blur-sm">
+              <p className="text-base text-zinc-300 leading-relaxed font-light">
+                Most bettors don't lose because they lack information. They lose because they lack feedback on their own behavior. 
+                <strong className="text-white font-semibold block mt-2">BettingClarity acts as a mirror for your decision-making, exposing the hidden risks and emotional habits that drain your bankroll.</strong>
+              </p>
+            </div>
+
+            <div className="inline-flex items-center gap-2 text-emerald-400/90 text-sm font-medium bg-emerald-900/10 px-6 py-3 rounded-full border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.15)]">
+              <ShieldCheck className="w-4 h-4" />
+              <span>This system doesn’t promise profits. It protects the balance you already have.</span>
+            </div>
           </div>
-        </div>
+        </Reveal>
 
         {/* 8 Report Cards Grid (WOW EDITION) */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-          {reports.map((report) => (
-            <div 
-              key={report.id}
-              className={`group relative bg-[#0a0a0a] rounded-2xl p-6 border border-white/5 hover:border-opacity-0 transition-all duration-500 cursor-pointer overflow-hidden h-full flex flex-col`}
-              onClick={() => setActiveReport(report.modalType || report.id)}
-            >
-              {/* Dynamic Border Glow on Hover */}
-              <div className={`absolute inset-0 border-2 border-transparent ${report.hoverBorder} rounded-2xl transition-colors duration-500 pointer-events-none`}></div>
-              
-              {/* Background Gradient Spot */}
-              <div className={`absolute -right-10 -top-10 w-32 h-32 bg-gradient-to-br ${report.glow} to-transparent blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-700`}></div>
+          {reports.map((report, index) => (
+            <Reveal key={report.id} delay={index * 100}>
+              <div 
+                className={`group relative bg-[#0a0a0a] rounded-2xl p-6 border border-white/5 hover:border-opacity-0 transition-all duration-500 cursor-pointer overflow-hidden h-full flex flex-col`}
+                onClick={() => setActiveReport(report.modalType || report.id)}
+              >
+                {/* Beam Effect */}
+                <BorderBeam colorClass={`from-${report.color.split('-')[1]}-500 to-transparent`} />
+                
+                {/* Dynamic Border Glow on Hover */}
+                <div className={`absolute inset-0 border-2 border-transparent ${report.hoverBorder} rounded-2xl transition-colors duration-500 pointer-events-none z-10`}></div>
+                
+                {/* Background Gradient Spot */}
+                <div className={`absolute -right-10 -top-10 w-32 h-32 bg-gradient-to-br ${report.glow} to-transparent blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-700`}></div>
 
-              {/* Header: Icon & Arrow */}
-              <div className="flex justify-between items-start mb-6 relative z-10">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center border border-white/10 bg-[#121212] group-hover:scale-110 transition-transform duration-500 shadow-lg`}>
-                  <report.icon className={`w-6 h-6 ${report.color} drop-shadow-md`} />
+                {/* Header: Icon & Arrow */}
+                <div className="flex justify-between items-start mb-6 relative z-10">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center border border-white/10 bg-[#121212] group-hover:scale-110 transition-transform duration-500 shadow-lg`}>
+                    <report.icon className={`w-6 h-6 ${report.color} drop-shadow-md`} />
+                  </div>
+                  <div className="p-2 rounded-full border border-white/5 bg-white/5 text-zinc-500 group-hover:text-white group-hover:bg-white/10 transition-all duration-300">
+                     <ArrowRight className="w-4 h-4 -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
+                  </div>
                 </div>
-                <div className="p-2 rounded-full border border-white/5 bg-white/5 text-zinc-500 group-hover:text-white group-hover:bg-white/10 transition-all duration-300">
-                   <ArrowRight className="w-4 h-4 -rotate-45 group-hover:rotate-0 transition-transform duration-500" />
+
+                {/* Content */}
+                <div className="relative z-10 flex-grow">
+                  <h3 className="text-xl font-bold text-white mb-3 group-hover:translate-x-1 transition-transform duration-300">{report.title}</h3>
+                  <p className="text-zinc-500 text-sm leading-relaxed font-light">
+                    {report.desc}
+                  </p>
+                </div>
+
+                {/* Footer / Tech Line */}
+                <div className="mt-8 pt-4 border-t border-white/5 flex items-center justify-between relative z-10 group-hover:border-white/10 transition-colors">
+                   <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-wider">Auto-Analysis</span>
+                   <span className={`text-xs font-bold ${report.color} flex items-center gap-1`}>
+                      View Report
+                   </span>
                 </div>
               </div>
-
-              {/* Content */}
-              <div className="relative z-10 flex-grow">
-                <h3 className="text-xl font-bold text-white mb-3 group-hover:translate-x-1 transition-transform duration-300">{report.title}</h3>
-                <p className="text-zinc-500 text-sm leading-relaxed font-light">
-                  {report.desc}
-                </p>
-              </div>
-
-              {/* Footer / Tech Line */}
-              <div className="mt-8 pt-4 border-t border-white/5 flex items-center justify-between relative z-10 group-hover:border-white/10 transition-colors">
-                 <span className="text-[10px] font-mono text-zinc-600 uppercase tracking-wider">Auto-Analysis</span>
-                 <span className={`text-xs font-bold ${report.color} flex items-center gap-1`}>
-                    View Report
-                 </span>
-              </div>
-            </div>
+            </Reveal>
           ))}
         </div>
 
         {/* Master Strategy & Course Integration Info */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-20">
-          
-          <div className="bg-gradient-to-br from-emerald-900/20 to-transparent border border-emerald-500/20 rounded-xl p-8 flex items-start">
-             <div className="mr-5 flex-shrink-0">
-               <div className="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center text-black">
-                 <LayoutDashboard className="w-6 h-6" />
+        <Reveal>
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-20">
+            
+            <div className="bg-gradient-to-br from-emerald-900/20 to-transparent border border-emerald-500/20 rounded-xl p-8 flex items-start">
+               <div className="mr-5 flex-shrink-0">
+                 <div className="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center text-black">
+                   <LayoutDashboard className="w-6 h-6" />
+                 </div>
                </div>
-             </div>
-             <div>
-               <h3 className="text-xl font-bold text-white mb-2">Master Strategy Generator</h3>
-               <p className="text-zinc-400 text-sm leading-relaxed mb-4">
-                 Found in the <strong>"My Reports"</strong> tab. The system can synthesize your recent audits into a coherent Game Plan, adjusting your staking rules and sport focus automatically.
-               </p>
-               <span className="text-emerald-500 text-xs font-bold uppercase tracking-wider">Available in Pro & Founder</span>
-             </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-blue-900/20 to-transparent border border-blue-500/20 rounded-xl p-8 flex items-start">
-             <div className="mr-5 flex-shrink-0">
-               <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center text-black">
-                 <BookOpen className="w-6 h-6" />
+               <div>
+                 <h3 className="text-xl font-bold text-white mb-2">Master Strategy Generator</h3>
+                 <p className="text-zinc-400 text-sm leading-relaxed mb-4">
+                   Found in the <strong>"My Reports"</strong> tab. The system can synthesize your recent audits into a coherent Game Plan, adjusting your staking rules and sport focus automatically.
+                 </p>
+                 <span className="text-emerald-500 text-xs font-bold uppercase tracking-wider">Available in Pro & Founder</span>
                </div>
-             </div>
-             <div>
-               <h3 className="text-xl font-bold text-white mb-2">Smart Recommendations</h3>
-               <p className="text-zinc-400 text-sm leading-relaxed mb-4">
-                 Every report is linked to our Course Library. The system doesn't just tell you what's wrong; it gives you the exact <strong>Video Module</strong> or <strong>Prompt</strong> you need to fix it.
-               </p>
-               <span className="text-blue-400 text-xs font-bold uppercase tracking-wider">Instant Learning Path</span>
-             </div>
-          </div>
+            </div>
 
-        </div>
+            <div className="bg-gradient-to-br from-blue-900/20 to-transparent border border-blue-500/20 rounded-xl p-8 flex items-start">
+               <div className="mr-5 flex-shrink-0">
+                 <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center text-black">
+                   <BookOpen className="w-6 h-6" />
+                 </div>
+               </div>
+               <div>
+                 <h3 className="text-xl font-bold text-white mb-2">Smart Recommendations</h3>
+                 <p className="text-zinc-400 text-sm leading-relaxed mb-4">
+                   Every report is linked to our Course Library. The system doesn't just tell you what's wrong; it gives you the exact <strong>Video Module</strong> or <strong>Prompt</strong> you need to fix it.
+                 </p>
+                 <span className="text-blue-400 text-xs font-bold uppercase tracking-wider">Instant Learning Path</span>
+               </div>
+            </div>
+
+          </div>
+        </Reveal>
 
         {/* Closing Line */}
         <div className="text-center max-w-4xl mx-auto">
@@ -801,31 +902,33 @@ const AgentSection = () => {
         </div>
 
         {/* Master Strategy Report Screenshot Placeholder */}
-        <div className="mt-12 relative mx-auto max-w-6xl group">
-            <div className="absolute -inset-1 bg-gradient-to-t from-emerald-500/20 via-emerald-500/5 to-transparent rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
-            <div className="relative rounded-2xl border border-white/10 bg-[#050505] overflow-hidden shadow-2xl">
-                {/* Mock Browser Header */}
-                <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-[#0a0a0a]">
-                    <div className="flex gap-1.5">
-                        <div className="w-3 h-3 rounded-full bg-zinc-700/50"></div>
-                        <div className="w-3 h-3 rounded-full bg-zinc-700/50"></div>
-                        <div className="w-3 h-3 rounded-full bg-zinc-700/50"></div>
-                    </div>
-                    <div className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">Master Strategy Preview</div>
-                    <div className="w-10"></div> {/* Spacer for centering */}
-                </div>
-                
-                {/* Image Placeholder */}
-                <div className="relative aspect-[16/9] w-full bg-[#0a0a0a] flex items-center justify-center">
-                    <img 
-                        src="agent-master-strategy-report-1200x675.webp" 
-                        alt="Master Strategy Report" 
-                        className="w-full h-full object-cover opacity-80"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-transparent to-transparent opacity-60"></div>
-                </div>
-            </div>
-        </div>
+        <Reveal>
+          <div className="mt-12 relative mx-auto max-w-6xl group">
+              <div className="absolute -inset-1 bg-gradient-to-t from-emerald-500/20 via-emerald-500/5 to-transparent rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-700"></div>
+              <div className="relative rounded-2xl border border-white/10 bg-[#050505] overflow-hidden shadow-2xl">
+                  {/* Mock Browser Header */}
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-[#0a0a0a]">
+                      <div className="flex gap-1.5">
+                          <div className="w-3 h-3 rounded-full bg-zinc-700/50"></div>
+                          <div className="w-3 h-3 rounded-full bg-zinc-700/50"></div>
+                          <div className="w-3 h-3 rounded-full bg-zinc-700/50"></div>
+                      </div>
+                      <div className="text-[10px] text-zinc-600 font-mono uppercase tracking-widest">Master Strategy Preview</div>
+                      <div className="w-10"></div> {/* Spacer for centering */}
+                  </div>
+                  
+                  {/* Image Placeholder */}
+                  <div className="relative aspect-[16/9] w-full bg-[#0a0a0a] flex items-center justify-center">
+                      <img 
+                          src="agent-master-strategy-report-1200x675.webp" 
+                          alt="Master Strategy Report" 
+                          className="w-full h-full object-cover opacity-80"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-transparent to-transparent opacity-60"></div>
+                  </div>
+              </div>
+          </div>
+        </Reveal>
 
       </div>
       
@@ -875,7 +978,7 @@ const LibrarySection = () => {
 
   return (
     <section className="relative py-24 bg-[#0a0a0a] border-t border-white/5">
-       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <SectionHeading 
             title="World-Class Knowledge at Your Fingertips." 
             subtitle="Not just a PDF. A streaming-quality library of video modules, case studies, and advanced prompts."
@@ -1120,55 +1223,66 @@ const ValueSection = () => (
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         
         {/* Point 1: Loss Prevention */}
-        <div className="p-6 rounded-2xl bg-zinc-900/30 border border-white/5 flex flex-col items-center text-center hover:border-white/10 transition-colors">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-zinc-900 border border-zinc-800 mb-5 text-red-400">
-            <ShieldCheck className="w-7 h-7" />
+        <Reveal>
+          <div className="p-6 rounded-2xl bg-zinc-900/30 border border-white/5 flex flex-col items-center text-center hover:border-white/10 transition-colors">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-zinc-900 border border-zinc-800 mb-5 text-red-400">
+              <ShieldCheck className="w-7 h-7" />
+            </div>
+            <h3 className="text-lg font-bold text-white mb-3">Loss Prevention</h3>
+            <p className="text-zinc-400 text-xs leading-relaxed">
+              Avoiding poorly timed entries or identifying red flags protects your capital. The goal is to eliminate unforced errors and emotional mistakes from your game.
+            </p>
           </div>
-          <h3 className="text-lg font-bold text-white mb-3">Loss Prevention</h3>
-          <p className="text-zinc-400 text-xs leading-relaxed">
-            Avoiding poorly timed entries or identifying red flags protects your capital. The goal is to eliminate unforced errors and emotional mistakes from your game.
-          </p>
-        </div>
+        </Reveal>
 
         {/* Point 2: Impulse Control */}
-        <div className="p-6 rounded-2xl bg-zinc-900/30 border border-white/5 flex flex-col items-center text-center hover:border-white/10 transition-colors">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-zinc-900 border border-zinc-800 mb-5 text-blue-400">
-            <Scale className="w-7 h-7" />
+        <Reveal delay={200}>
+          <div className="p-6 rounded-2xl bg-zinc-900/30 border border-white/5 flex flex-col items-center text-center hover:border-white/10 transition-colors">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-zinc-900 border border-zinc-800 mb-5 text-blue-400">
+              <Scale className="w-7 h-7" />
+            </div>
+            <h3 className="text-lg font-bold text-white mb-3">Impulse Control</h3>
+            <p className="text-zinc-400 text-xs leading-relaxed">
+              Structuring your process naturally reduces overtrading and boredom bets. When you have to log a decision, you are less likely to force a low-quality play.
+            </p>
           </div>
-          <h3 className="text-lg font-bold text-white mb-3">Impulse Control</h3>
-          <p className="text-zinc-400 text-xs leading-relaxed">
-            Structuring your process naturally reduces overtrading and boredom bets. When you have to log a decision, you are less likely to force a low-quality play.
-          </p>
-        </div>
+        </Reveal>
 
         {/* Point 3: Decision Awareness */}
-        <div className="p-6 rounded-2xl bg-zinc-900/30 border border-white/5 flex flex-col items-center text-center hover:border-white/10 transition-colors">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-zinc-900 border border-zinc-800 mb-5 text-purple-400">
-            <Lightbulb className="w-7 h-7" />
+        <Reveal delay={400}>
+          <div className="p-6 rounded-2xl bg-zinc-900/30 border border-white/5 flex flex-col items-center text-center hover:border-white/10 transition-colors">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-zinc-900 border border-zinc-800 mb-5 text-purple-400">
+              <Lightbulb className="w-7 h-7" />
+            </div>
+            <h3 className="text-lg font-bold text-white mb-3">Decision Awareness</h3>
+            <p className="text-zinc-400 text-xs leading-relaxed">
+              Discipline becomes automatic when you can see your data. Learning from your own history creates a feedback loop that protects your bankroll.
+            </p>
           </div>
-          <h3 className="text-lg font-bold text-white mb-3">Decision Awareness</h3>
-          <p className="text-zinc-400 text-xs leading-relaxed">
-            Discipline becomes automatic when you can see your data. Learning from your own history creates a feedback loop that protects your bankroll.
-          </p>
-        </div>
+        </Reveal>
 
         {/* Point 4: System Effect (Highlighted) */}
-        <div 
-          className="p-6 rounded-2xl bg-emerald-900/10 border border-emerald-500/30 flex flex-col items-center text-center relative group cursor-pointer hover:bg-emerald-900/20 transition-all shadow-[0_0_30px_-15px_rgba(16,185,129,0.2)]"
-          onClick={() => document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' })}
-        >
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent opacity-50"></div>
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-emerald-500/10 border border-emerald-500/20 mb-5 text-emerald-400 group-hover:scale-110 transition-transform">
-            <Workflow className="w-7 h-7" />
+        <Reveal delay={600}>
+          <div 
+            className="p-6 rounded-2xl bg-emerald-900/10 border border-emerald-500/30 flex flex-col items-center text-center relative group cursor-pointer hover:bg-emerald-900/20 transition-all shadow-[0_0_30px_-15px_rgba(16,185,129,0.2)]"
+            onClick={() => document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' })}
+          >
+            {/* Beam Effect */}
+            <BorderBeam colorClass="from-emerald-500 via-emerald-200 to-transparent" />
+            
+            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent opacity-50"></div>
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-emerald-500/10 border border-emerald-500/20 mb-5 text-emerald-400 group-hover:scale-110 transition-transform relative z-10">
+              <Workflow className="w-7 h-7" />
+            </div>
+            <h3 className="text-lg font-bold text-white mb-3 relative z-10">The System Effect</h3>
+            <p className="text-zinc-300 text-xs leading-relaxed mb-4 relative z-10">
+              Operating without a system is the most expensive mistake of all. BettingClarity provides the professional baseline you need to compete.
+            </p>
+            <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center mt-auto group-hover:translate-x-1 transition-transform relative z-10">
+              Start Your System <ArrowRight className="w-3 h-3 ml-1" />
+            </span>
           </div>
-          <h3 className="text-lg font-bold text-white mb-3">The System Effect</h3>
-          <p className="text-zinc-300 text-xs leading-relaxed mb-4">
-            Operating without a system is the most expensive mistake of all. BettingClarity provides the professional baseline you need to compete.
-          </p>
-          <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center mt-auto group-hover:translate-x-1 transition-transform">
-            Start Your System <ArrowRight className="w-3 h-3 ml-1" />
-          </span>
-        </div>
+        </Reveal>
 
       </div>
     </div>
@@ -1452,7 +1566,7 @@ const Pricing = () => {
                 <li className="flex text-zinc-300 text-sm"><CheckCircle className="w-4 h-4 text-emerald-500/70 mr-3 flex-shrink-0" /> Full Prompt Library (50+)</li>
               </ul>
               
-              <Button variant="primary" className="w-full py-4 text-lg shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)] hover:shadow-[0_0_40px_-5px_rgba(16,185,129,0.5)]" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>
+              <Button variant="primary" beam={true} className="w-full py-4 text-lg shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)] hover:shadow-[0_0_40px_-5px_rgba(16,185,129,0.5)]" onClick={() => window.location.href = 'https://app.bettingclarity.com'}>
                 Get Clarity Now
               </Button>
               <p className="mt-4 text-[10px] text-zinc-500 flex items-center justify-center">

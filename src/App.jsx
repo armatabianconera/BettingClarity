@@ -91,77 +91,20 @@ const Reveal = ({ children, delay = 0, className = "" }) => {
 };
 
 // 2. Border Beam Animation Component
-const BorderBeam = ({ colorClass = "from-emerald-500 via-emerald-200 to-transparent", duration = 8 }) => (
+const BorderBeam = ({ colorClass = "from-emerald-500 via-emerald-200 to-transparent" }) => (
   <div className="absolute inset-0 rounded-[inherit] pointer-events-none overflow-hidden [mask-image:linear-gradient(white,white)] z-0">
-    <div className={`absolute aspect-square w-[200%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-tr ${colorClass} opacity-40 animate-spin-slow`} style={{ animationDuration: `${duration}s` }} />
+    <div className={`absolute aspect-square w-[200%] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-tr ${colorClass} opacity-40 animate-spin-slow`} />
   </div>
 );
 
-// 3. Spotlight Card Component (Mouse Tracking Glow)
-const SpotlightCard = ({ children, className = "" }) => {
-  const divRef = useRef(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(0);
-
-  const handleMouseMove = (e) => {
-    if (!divRef.current) return;
-
-    const div = divRef.current;
-    const rect = div.getBoundingClientRect();
-
-    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
-
-  const handleMouseEnter = () => {
-    setOpacity(1);
-  };
-
-  const handleMouseLeave = () => {
-    setOpacity(0);
-  };
-
-  return (
-    <div
-      ref={divRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={`relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a]/60 backdrop-blur-md transition-all duration-500 group ${className}`}
-    >
-      {/* The Spotlight Glow */}
-      <div
-        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"
-        style={{
-          opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(16, 185, 129, 0.1), transparent 40%)`,
-        }}
-      />
-      {/* Content */}
-      <div className="relative h-full z-10">
-        {children}
-      </div>
-    </div>
-  );
-};
-
-// 4. Background Structure Component
+// 3. Background Structure Component
 const BackgroundStructure = () => (
-  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#050505]">
-    {/* 1. Grain/Noise Texture Overlay (Top Layer for tactile feel) */}
-    <div className="absolute inset-0 z-10 opacity-[0.035] mix-blend-overlay pointer-events-none" 
-         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}>
-    </div>
-
-    {/* 2. Ambient Mesh Gradients (Orbs) */}
-    <div className="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-emerald-900/10 blur-[120px] animate-blob mix-blend-screen"></div>
-    <div className="absolute top-[40%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-emerald-600/5 blur-[120px] animate-blob animation-delay-2000 mix-blend-screen"></div>
-    <div className="absolute bottom-[-10%] left-[20%] w-[60vw] h-[60vw] rounded-full bg-zinc-800/20 blur-[120px] animate-blob animation-delay-4000 mix-blend-screen"></div>
-
-    {/* 3. Technical Grid (Faint) */}
-    <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px] z-0"></div>
+  <div className="fixed inset-0 pointer-events-none z-0">
+    {/* Faint Grid */}
+    <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px]"></div>
     
-    {/* 4. Vertical Container Lines */}
-    <div className="max-w-7xl mx-auto h-full border-x border-white/[0.03] flex justify-between relative z-0">
+    {/* Vertical Container Lines */}
+    <div className="max-w-7xl mx-auto h-full border-x border-white/[0.03] flex justify-between relative">
       <div className="absolute top-0 bottom-0 left-1/4 w-px bg-white/[0.02] hidden md:block"></div>
       <div className="absolute top-0 bottom-0 left-1/2 w-px bg-white/[0.02]"></div>
       <div className="absolute top-0 bottom-0 left-3/4 w-px bg-white/[0.02] hidden md:block"></div>
@@ -169,73 +112,21 @@ const BackgroundStructure = () => (
   </div>
 );
 
-// 5. Feature Noodle (Curved Line)
-const FeatureNoodle = ({ activeIndex }) => {
-  const startYs = [16, 50, 84];
-  const endY = 50;
-  
-  return (
-    <div className="absolute inset-0 pointer-events-none z-20 hidden lg:block overflow-visible">
-      <svg className="w-full h-full overflow-visible">
-        <defs>
-          <linearGradient id="beam-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(16, 185, 129, 0)" />
-            <stop offset="50%" stopColor="#10b981" />
-            <stop offset="100%" stopColor="rgba(16, 185, 129, 0)" />
-          </linearGradient>
-          <mask id="beam-mask">
-            <path 
-              d={`M 45% ${startYs[activeIndex]}% C 55% ${startYs[activeIndex]}%, 45% ${endY}%, 55% ${endY}%`} 
-              fill="none" 
-              stroke="white" 
-              strokeWidth="2"
-            />
-          </mask>
-        </defs>
-
-        <path 
-          d={`M 48% ${startYs[activeIndex]}% C 55% ${startYs[activeIndex]}%, 45% ${endY}%, 52% ${endY}%`} 
-          fill="none" 
-          stroke="rgba(255,255,255,0.05)" 
-          strokeWidth="1"
-          className="transition-all duration-700 ease-out"
-        />
-
-        <path 
-          d={`M 48% ${startYs[activeIndex]}% C 55% ${startYs[activeIndex]}%, 45% ${endY}%, 52% ${endY}%`} 
-          fill="none" 
-          stroke="url(#beam-gradient)" 
-          strokeWidth="2"
-          strokeLinecap="round"
-          className="transition-all duration-700 ease-out"
-          style={{
-            strokeDasharray: '10 100',
-            animation: 'dash 3s linear infinite'
-          }}
-        />
-      </svg>
-      <style>{`
-        @keyframes dash {
-          to {
-            stroke-dashoffset: -200;
-          }
-        }
-      `}</style>
-    </div>
-  );
-};
-
 // --- NEW: Smart Logo Component (Auto-fallback) ---
 const Logo = () => {
   const [imgError, setImgError] = useState(false);
 
   return (
     <div className="flex items-center gap-2">
+      {/* INFORMACJA: Używamy nowego pliku logo "clarity.png", który zawiera już napis (logotyp).
+          Wgrywamy plik na serwer. Jeśli się załaduje, ukrywamy standardowy tekst obok.
+          W przypadku błędu (np. brak pliku), przywracamy starą ikonę i tekst.
+      */}
       {!imgError ? (
         <img 
           src="clarity.png" 
           alt="BettingClarity" 
-          className="h-10 w-auto object-contain" 
+          className="h-10 w-auto object-contain" // Zwiększona wysokość dla czytelności napisu w logo
           onError={() => setImgError(true)} 
         />
       ) : (
@@ -290,7 +181,7 @@ const VideoModal = ({ isOpen, onClose, videoId }) => {
 // --- Global Styles for Font & Smooth Scroll ---
 const GlobalStyles = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
     
     body {
       font-family: 'Inter', sans-serif;
@@ -298,6 +189,16 @@ const GlobalStyles = () => (
       color: #ffffff;
     }
     
+    .blob-green {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+      filter: blur(60px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
     .glass-panel {
       background: rgba(30, 30, 30, 0.6);
       backdrop-filter: blur(12px);
@@ -316,38 +217,9 @@ const GlobalStyles = () => (
     .animate-fade-in {
       animation: fadeIn 0.4s ease-out forwards;
     }
-    
-    .animate-blur-in {
-      animation: blurIn 1.2s ease-out forwards;
-    }
-    
-    @keyframes blurIn {
-      0% {
-        opacity: 0;
-        filter: blur(12px);
-        transform: translateY(10px);
-      }
-      100% {
-        opacity: 1;
-        filter: blur(0px);
-        transform: translateY(0);
-      }
-    }
 
     .animate-spin-slow {
       animation: spin 8s linear infinite;
-    }
-
-    .animate-blob {
-      animation: blob 20s infinite;
-    }
-    
-    .animation-delay-2000 {
-      animation-delay: 2s;
-    }
-    
-    .animation-delay-4000 {
-      animation-delay: 4s;
     }
 
     @keyframes fadeIn {
@@ -358,13 +230,6 @@ const GlobalStyles = () => (
     @keyframes spin {
       from { transform: translate(-50%, -50%) rotate(0deg); }
       to { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-
-    @keyframes blob {
-      0% { transform: translate(0px, 0px) scale(1); }
-      33% { transform: translate(30px, -50px) scale(1.1); }
-      66% { transform: translate(-20px, 20px) scale(0.9); }
-      100% { transform: translate(0px, 0px) scale(1); }
     }
   `}</style>
 );
@@ -379,7 +244,7 @@ const Button = ({ children, variant = 'primary', className = '', beam = false, .
     secondary: "bg-[#1e1e1e] hover:bg-[#2a2a2a] text-white border border-white/10 hover:border-emerald-500/50 hover:text-emerald-400 shadow-lg shadow-black/50",
     outline: "bg-transparent border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500",
     white: "bg-white text-black hover:bg-zinc-200 shadow-[0_0_20px_rgba(255,255,255,0.2)]",
-    premium: "bg-zinc-950/50 backdrop-blur-md text-emerald-100 border border-white/10 hover:bg-zinc-900/80 hover:text-white hover:border-emerald-500/50 hover:shadow-[0_0_25px_rgba(16,185,129,0.3)] font-medium tracking-wider group"
+    premium: "bg-zinc-950/50 backdrop-blur-md text-emerald-100 border border-white/10 hover:bg-zinc-900/80 hover:text-white hover:border-emerald-500/50 hover:shadow-[0_0_25px_rgba(16,185,129,0.3)] font-medium tracking-wider"
   };
 
   return (
@@ -390,7 +255,7 @@ const Button = ({ children, variant = 'primary', className = '', beam = false, .
           duration={variant === 'premium' ? 4 : 8}
         />
       )}
-      <span className="relative z-10 flex items-center gap-2">{children}</span>
+      <span className="relative z-10 flex items-center">{children}</span>
     </button>
   );
 };
@@ -464,115 +329,85 @@ const Hero = ({ onWatchVideo }) => {
   const scrollToSolution = () => document.getElementById('solution').scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <section className="relative pt-48 pb-20 lg:pt-64 lg:pb-32 overflow-hidden flex flex-col items-center justify-center min-h-[70vh]">
+    <section className="relative pt-48 pb-20 lg:pt-48 lg:pb-32 overflow-hidden flex flex-col items-center justify-center min-h-[85vh]">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-[#0a0a0a] z-0"></div>
+      <div className="blob-green top-0 left-1/2 -translate-x-1/2 opacity-20 blur-[100px] w-[800px] h-[800px] rounded-full z-0"></div>
       
-      {/* Deep Cosmic Void / Glow behind Text */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none z-0"></div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
         
-        {/* Headline with Progressive Blur Effect */}
+        {/* Headline with Mist Effect */}
         <Reveal>
-          <div className="relative mb-12">
-             <h1 className="text-5xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter leading-[1.05] relative z-10 font-sans">
-              <span className="animate-blur-in inline-block" style={{ animationDelay: '0.1s' }}>Stop Guessing.</span> <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-200 to-cyan-300 animate-blur-in inline-block" style={{ animationDelay: '0.3s' }}>
+          <div className="relative">
+             {/* Delicate Mist/Glow behind text */}
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-emerald-500/10 blur-[80px] rounded-full pointer-events-none -z-10 mix-blend-screen"></div>
+             
+             <h1 className="text-5xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter mb-40 leading-[1.1] relative z-10">
+              Stop Guessing. <br className="hidden md:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-200 to-white">
                 Start Deciding.
               </span>
             </h1>
           </div>
         </Reveal>
         
-        {/* Buttons (Upgraded) */}
+        {/* Buttons (Preserved) */}
         <Reveal delay={200}>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-            <Button 
-                onClick={scrollToPricing} 
-                variant="premium" 
-                beam={true} 
-                className="h-16 px-10 text-lg sm:w-auto w-full"
-            >
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+            <Button onClick={scrollToPricing} beam={true} className="h-14 px-8 text-lg shadow-[0_0_50px_-10px_rgba(16,185,129,0.5)]">
               Get Started Now
-              <ArrowRight size={20} className="ml-1 transition-transform group-hover:translate-x-1" />
+              <ArrowRight size={20} className="ml-2" />
             </Button>
-            
-            <button 
-                className="h-16 px-10 text-lg text-zinc-300 hover:text-white bg-black/30 hover:bg-white/5 border border-white/10 hover:border-white/20 rounded-lg backdrop-blur-sm transition-all duration-300 flex items-center justify-center gap-2 sm:w-auto w-full" 
-                onClick={scrollToSolution}
-            >
-              <ArrowDown size={20} className="text-zinc-500 group-hover:text-white transition-colors" />
+            <Button variant="secondary" className="h-14 px-8 text-lg bg-[#0a0a0a] hover:bg-[#1a1a1a]" onClick={scrollToSolution}>
+              <ArrowDown size={20} className="mr-2" />
               Learn More
-            </button>
+            </Button>
           </div>
         </Reveal>
-      </div>
-    </section>
-  );
-};
 
-const Testimonials = () => {
-  const testimonials = [
-    {
-      initial: "M",
-      name: "Marko",
-      location: "Finland",
-      quote: "The biggest improvement wasn’t better bets—it was better no-bets. BettingClarity helped me understand when not acting is the correct decision."
-    },
-    {
-      initial: "J",
-      name: "Jonas",
-      location: "Norway",
-      quote: "BettingClarity was the first tool that made me realize I wasn’t losing on odds. I was losing on timing and emotions. The Decision Journal alone changed how often I say PASS."
-    },
-    {
-      initial: "L",
-      name: "Leon",
-      location: "Malta",
-      quote: "Just access to the prompt library and the courses completely changed how I watch and think about matches. I enjoy betting more now, because I understand my decisions instead of chasing outcomes."
-    }
-  ];
-
-  return (
-    <section className="py-24 relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-white/5">
-      <Reveal>
-        <div className="flex flex-col items-center mb-16">
-          <div className="px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 text-[10px] font-bold uppercase tracking-widest mb-4">
-            Community
+        {/* 3 Bullet Points (Preserved) */}
+        <Reveal delay={400}>
+          <div className="mt-20 grid md:grid-cols-3 gap-6 text-left relative z-10">
+          <div className="bg-zinc-900/90 border border-white/10 p-6 rounded-xl backdrop-blur-sm hover:border-emerald-500/30 transition-colors shadow-lg shadow-black/50">
+            <div className="flex items-center gap-1 text-emerald-400 mb-4">
+              {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-emerald-400" />)}
+            </div>
+            <p className="text-zinc-200 text-sm mb-4 leading-relaxed">
+              “The biggest improvement wasn’t better bets- it was better no-bets. BettingClarity helped me understand when not acting is the correct decision.”
+            </p>
+            <div className="flex items-center gap-3 mt-auto pt-2 border-t border-white/5">
+              <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">M</div>
+              <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Marko, Finland</div>
+            </div>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Trusted by Smart Bettors</h2>
-        </div>
-      </Reveal>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        {testimonials.map((t, i) => (
-          <Reveal key={i} delay={i * 100}>
-            <SpotlightCard className="h-full p-8 hover:shadow-2xl hover:shadow-emerald-500/5 transition-all duration-500">
-               <div className="flex flex-col h-full justify-between">
-                 <div>
-                   <div className="flex items-center gap-1 mb-6">
-                     {[...Array(5)].map((_, i) => (
-                       <Star key={i} size={14} className="fill-emerald-400/20 text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]" />
-                     ))}
-                   </div>
-                   <p className="text-zinc-300 font-light leading-relaxed mb-8 text-[15px]">"{t.quote}"</p>
-                 </div>
-                 
-                 <div className="flex items-center gap-4 pt-6 border-t border-white/5">
-                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-zinc-800 to-black border border-white/10 flex items-center justify-center relative shadow-inner">
-                     <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-emerald-500/20 to-transparent opacity-50"></div>
-                     <span className="text-white font-bold text-sm relative z-10">{t.initial}</span>
-                   </div>
-                   <div>
-                     <div className="text-white font-bold text-sm">{t.name}</div>
-                     <div className="text-zinc-500 font-mono text-xs">{t.location}</div>
-                   </div>
-                 </div>
-               </div>
-            </SpotlightCard>
-          </Reveal>
-        ))}
+          <div className="bg-zinc-900/90 border border-white/10 p-6 rounded-xl backdrop-blur-sm hover:border-emerald-500/30 transition-colors shadow-lg shadow-black/50">
+            <div className="flex items-center gap-1 text-emerald-400 mb-4">
+              {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-emerald-400" />)}
+            </div>
+            <p className="text-zinc-200 text-sm mb-4 leading-relaxed">
+              “BettingClarity was the first tool that made me realize I wasn’t losing on odds. I was losing on timing and emotions. The Decision Journal alone changed how often I say PASS.”
+            </p>
+            <div className="flex items-center gap-3 mt-auto pt-2 border-t border-white/5">
+              <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">J</div>
+              <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Jonas, Norway</div>
+            </div>
+          </div>
+
+          <div className="bg-zinc-900/90 border border-white/10 p-6 rounded-xl backdrop-blur-sm hover:border-emerald-500/30 transition-colors shadow-lg shadow-black/50">
+            <div className="flex items-center gap-1 text-emerald-400 mb-4">
+              {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-emerald-400" />)}
+            </div>
+            <p className="text-zinc-200 text-sm mb-4 leading-relaxed">
+              “Just access to the prompt library and the courses completely changed how I watch and think about matches. I enjoy betting more now, because I understand my decisions instead of chasing outcomes.”
+            </p>
+            <div className="flex items-center gap-3 mt-auto pt-2 border-t border-white/5">
+              <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">L</div>
+              <div className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Leon, Malta</div>
+            </div>
+          </div>
+        </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -1441,7 +1276,7 @@ const ValueSection = () => (
         {/* Point 4: System Effect (Highlighted) */}
         <Reveal delay={600}>
           <div 
-            className="p-6 rounded-2xl bg-emerald-900/10 border border-emerald-500/30 flex flex-col items-center text-center relative group cursor-pointer hover:bg-emerald-900/20 transition-all shadow-[0_0_30px_-15px_rgba(16,185,129,0.2)]"
+            className="p-6 rounded-2xl bg-[#050505] border border-emerald-500/20 flex flex-col items-center text-center relative group cursor-pointer hover:bg-[#0a0a0a] transition-all shadow-[0_0_30px_-15px_rgba(16,185,129,0.1)]"
             onClick={() => document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' })}
           >
             {/* Beam Effect */}
@@ -1979,7 +1814,6 @@ const App = () => {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden selection:bg-emerald-500/30 selection:text-emerald-200">
       <GlobalStyles />
-      <BackgroundStructure />
       
       {legalModal && (
         <LegalModal 
@@ -2012,7 +1846,6 @@ const App = () => {
       </nav>
 
       <Hero onWatchVideo={() => setVideoModalOpen(true)} />
-      <Testimonials />
       <Problem />
       <Solution />
       <AgentSection />

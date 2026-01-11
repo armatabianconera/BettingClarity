@@ -118,19 +118,25 @@ const Logo = () => {
 
   return (
     <div className="flex items-center gap-2">
+      {/* INFORMACJA: Używamy nowego pliku logo "clarity.png", który zawiera już napis (logotyp).
+          Wgrywamy plik na serwer. Jeśli się załaduje, ukrywamy standardowy tekst obok.
+          W przypadku błędu (np. brak pliku), przywracamy starą ikonę i tekst.
+      */}
       {!imgError ? (
         <img 
-          src="logo.png" 
-          alt="BettingClarity Logo" 
-          className="w-8 h-8 object-contain rounded-lg" 
+          src="clarity.png" 
+          alt="BettingClarity" 
+          className="h-10 w-auto object-contain" // Zwiększona wysokość dla czytelności napisu w logo
           onError={() => setImgError(true)} 
         />
       ) : (
-        <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-black">
-          <Workflow className="w-5 h-5" />
-        </div>
+        <>
+          <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-black">
+            <Workflow className="w-5 h-5" />
+          </div>
+          <span className="text-white font-bold text-xl tracking-tight">BettingClarity</span>
+        </>
       )}
-      <span className="text-white font-bold text-xl tracking-tight">BettingClarity</span>
     </div>
   );
 };
@@ -237,12 +243,18 @@ const Button = ({ children, variant = 'primary', className = '', beam = false, .
     primary: "bg-emerald-500 hover:bg-emerald-400 text-black shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] border border-emerald-400/20",
     secondary: "bg-[#1e1e1e] hover:bg-[#2a2a2a] text-white border border-white/10 hover:border-emerald-500/50 hover:text-emerald-400 shadow-lg shadow-black/50",
     outline: "bg-transparent border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500",
-    white: "bg-white text-black hover:bg-zinc-200 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+    white: "bg-white text-black hover:bg-zinc-200 shadow-[0_0_20px_rgba(255,255,255,0.2)]",
+    premium: "bg-zinc-950/50 backdrop-blur-md text-emerald-100 border border-white/10 hover:bg-zinc-900/80 hover:text-white hover:border-emerald-500/50 hover:shadow-[0_0_25px_rgba(16,185,129,0.3)] font-medium tracking-wider"
   };
 
   return (
     <button className={`${baseStyle} ${variants[variant]} ${className}`} {...props}>
-      {beam && variant === 'primary' && <BorderBeam colorClass="from-white via-white to-transparent" />}
+      {beam && (variant === 'primary' || variant === 'premium') && (
+        <BorderBeam 
+          colorClass={variant === 'premium' ? "from-emerald-400 via-emerald-500 to-transparent" : "from-white via-white to-transparent"} 
+          duration={variant === 'premium' ? 4 : 8}
+        />
+      )}
       <span className="relative z-10 flex items-center">{children}</span>
     </button>
   );
@@ -1750,9 +1762,8 @@ const FAQ = () => (
 const Footer = ({ onOpenTerms, onOpenPrivacy }) => (
   <footer className="bg-[#050505] py-16 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div className="flex items-center justify-center gap-2 mb-8 text-white font-bold text-2xl tracking-tight">
-        <Workflow className="w-6 h-6 text-emerald-500" />
-        <span>BettingClarity</span>
+      <div className="flex items-center justify-center mb-8">
+        <Logo />
       </div>
       
       <div className="max-w-3xl mx-auto bg-[#0a0a0a] p-8 rounded-2xl border border-white/5 mb-10">
@@ -1822,18 +1833,14 @@ const App = () => {
       
       <nav className="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center text-black">
-              <Workflow className="w-5 h-5" />
-            </div>
-            <span className="text-white font-bold text-xl tracking-tight">BettingClarity</span>
-          </div>
+          <Logo />
           <Button 
-            variant="primary" 
-            className="hidden sm:flex !py-2.5 !px-6 text-sm !font-bold"
-            onClick={() => document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' })}
+            variant="premium" 
+            beam={true}
+            className="hidden sm:flex !py-2 !px-8 text-sm"
+            onClick={() => window.location.href = 'https://app.bettingclarity.com'}
           >
-            Get Clarity Now
+            Login
           </Button>
         </div>
       </nav>
